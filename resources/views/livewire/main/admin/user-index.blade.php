@@ -1,0 +1,294 @@
+<div>
+
+    <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+
+        <div>
+
+            <h4 class="fw-bold mb-1">
+                Users
+            </h4>
+
+            <p class="text-muted mb-0">
+                Manage application users.
+            </p>
+
+        </div>
+
+    </div>
+
+    {{-- FILTERS --}}
+    <div class="app-card p-3 mb-4">
+
+        <div class="row g-3">
+
+            {{-- SEARCH --}}
+            <div class="col-lg-8">
+
+                <div class="position-relative">
+
+                    <i class="bi bi-search app-input-icon"></i>
+
+                    <input type="text" wire:model.live.debounce.300ms="search" class="form-control app-input ps-5"
+                        placeholder="Search users...">
+
+                </div>
+
+            </div>
+
+            {{-- ROLE --}}
+            <div class="col-lg-4">
+
+                <select wire:model.live="role" class="form-select app-input">
+
+                    <option value="">
+                        All Roles
+                    </option>
+
+                    <option value="admin">
+                        Admin
+                    </option>
+
+                    <option value="user">
+                        User
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {{-- USERS TABLE --}}
+    <div class="app-card overflow-hidden">
+
+        <div class="table-responsive">
+
+            <table class="table align-middle mb-0 app-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            User
+                        </th>
+
+                        <th>
+                            Role
+                        </th>
+
+                        <th>
+                            Theme
+                        </th>
+
+                        <th>
+                            Sync
+                        </th>
+
+                        <th>
+                            Joined
+                        </th>
+
+                        <th class="text-end">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @forelse ($users as $user)
+
+                    <tr wire:key="user-{{ $user->id }}">
+
+                        {{-- USER --}}
+                        <td>
+
+                            <div class="d-flex align-items-center gap-3">
+
+                                <div class="app-user-avatar">
+
+                                    {{ strtoupper(substr($user->name, 0, 1)) }}
+
+                                </div>
+
+                                <div>
+
+                                    <div class="fw-semibold">
+
+                                        {{ $user->name }}
+
+                                    </div>
+
+                                    <div class="small text-muted">
+
+                                        {{ $user->email }}
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                        {{-- ROLE --}}
+                        <td>
+
+                            <span class="badge app-role-badge">
+
+                                {{ ucfirst($user->role) }}
+
+                            </span>
+
+                        </td>
+
+                        {{-- THEME --}}
+                        <td>
+
+                            <span class="small text-muted">
+
+                                {{ ucfirst($user->theme) }}
+
+                            </span>
+
+                        </td>
+
+                        {{-- SYNC --}}
+                        <td>
+
+                            @if ($user->is_synced)
+
+                            <span class="badge bg-success-subtle text-success">
+
+                                Synced
+
+                            </span>
+
+                            @else
+
+                            <span class="badge bg-warning-subtle text-warning">
+
+                                Pending
+
+                            </span>
+
+                            @endif
+
+                        </td>
+
+                        {{-- CREATED --}}
+                        <td>
+
+                            <span class="small text-muted">
+
+                                {{ $user->created_at->diffForHumans() }}
+
+                            </span>
+
+                        </td>
+
+                        {{-- ACTIONS --}}
+                        <td class="text-end">
+
+                            <div class="dropdown">
+
+                                <button class="btn app-icon-btn btn-sm" data-bs-toggle="dropdown">
+
+                                    <i class="bi bi-three-dots"></i>
+
+                                </button>
+
+                                <ul class="dropdown-menu dropdown-menu-end">
+
+                                    <li>
+                                       
+                                            <a href="{{ route('admin.users.view', $user) }}" class="dropdown-item">
+                                                <i class="bi bi-eye"></i>
+                                                View
+                                            </a>
+
+                                    </li>
+
+                                    <li>
+
+                                        <button class="dropdown-item">
+
+                                            <i class="bi bi-pencil"></i>
+
+                                            Edit
+
+                                        </button>
+
+                                    </li>
+
+                                    <li>
+
+                                        <button class="dropdown-item text-danger">
+
+                                            <i class="bi bi-trash"></i>
+
+                                            Delete
+
+                                        </button>
+
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    @empty
+
+                    <tr>
+
+                        <td colspan="6">
+
+                            <div class="text-center py-5">
+
+                                <div class="mb-3">
+
+                                    <i class="bi bi-people fs-1 text-muted"></i>
+
+                                </div>
+
+                                <h6 class="fw-semibold">
+                                    No users found
+                                </h6>
+
+                                <p class="text-muted mb-0">
+                                    Try adjusting your search filters.
+                                </p>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    {{-- PAGINATION --}}
+    <div class="mt-4">
+
+        {{ $users->links() }}
+
+    </div>
+
+</div>

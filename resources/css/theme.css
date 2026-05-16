@@ -1,0 +1,253 @@
+/*ROOT DEFAULTS*/
+:root {
+
+    /*APP*/
+    --app-radius-sm: 0.5rem;
+    --app-radius: 1rem;
+    --app-radius-lg: 1.5rem;
+    --app-sidebar-width: 280px;
+    --app-transition: 0.2s ease-in-out;
+
+    /*TYPOGRAPHY*/
+    --app-font-sans: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+    /*BRAND*/
+    --app-primary: #6366f1;
+    --app-primary-rgb: 99, 102, 241;
+
+    --app-success: #10b981;
+    --app-warning: #f59e0b;
+    --app-danger: #ef4444;
+    --app-info: #0ea5e9;
+
+    /*STATUS COLORS*/
+    --todo-status-todo: #94a3b8;
+    --todo-status-doing: #f59e0b;
+    --todo-status-done: #10b981;
+    --todo-status-archived: #64748b;
+}
+
+/*LIGHT THEME*/
+:root,
+[data-theme="light"] {
+
+    color-scheme: light;
+    /*BACKGROUNDS*/
+    --app-bg: #f5f7fb;
+    --app-surface: #eef2f7;
+    --app-card: #ffffff;
+    --app-card-hover: #f8fafc;
+
+    /*TEXT*/
+    --app-text: #0f172a;
+    --app-text-muted: #64748b;
+    --app-heading: #020617;
+
+    /*BORDERS*/
+    --app-border: rgba(15, 23, 42, 0.08);
+
+    /*SIDEBAR*/
+    --app-sidebar-bg: #ffffff;
+    --app-sidebar-border: rgba(15, 23, 42, 0.06);
+
+    /*NAVBAR*/
+    --app-navbar-bg: rgba(255, 255, 255, 0.8);
+
+    /*INPUTS*/
+    --app-input-bg: #ffffff;
+    --app-input-border: rgba(15, 23, 42, 0.08);
+
+    /*SHADOWS*/
+    --app-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+    --app-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
+
+
+
+    /*GLASSMORPHISM*/
+    --app-glass-bg: rgba(255, 255, 255, 0.72);
+    --app-glass-border: rgba(255, 255, 255, 0.45);
+
+    /*SIDEBAR*/
+
+    --app-sidebar-item-hover: rgba(99, 102, 241, 0.08);
+    --app-sidebar-item-active: rgba(99, 102, 241, 0.14);
+
+    /*SCROLLBAR*/
+    --app-scrollbar: rgba(15, 23, 42, 0.12);
+    --app-scrollbar-hover: rgba(15, 23, 42, 0.2);
+
+    /*BACKDROP*/
+    --app-backdrop: rgba(15, 23, 42, 0.45);
+
+    /*KANBAN*/
+
+    --app-kanban-column: #eef2f7;
+    /*MODALS*/
+    --app-modal-bg: #ffffff;
+
+    /*DROPDOWNS*/
+    --app-dropdown-bg: #ffffff;
+    --app-dropdown-hover: rgba(99, 102, 241, 0.08);
+    --app-dropdown-item-color: var(--app-text);
+
+    --app-dropdown-item-hover-color: var(--app-heading);
+
+    --app-dropdown-item-active-color: var(--app-primary);
+
+    /*HOVER STATES*/
+    --app-hover: rgba(15, 23, 42, 0.03);
+
+    /*SELECTION*/
+
+    --app-selection: rgba(99, 102, 241, 0.2);
+
+    /*DIVIDERS*/
+    --app-divider: rgba(15, 23, 42, 0.06);
+}
+
+/*DARK THEME*/
+[data-theme="dark"] {
+
+    color-scheme: dark;
+    /*BACKGROUNDS*/
+    --app-bg: #0f172a;
+    --app-surface: #111827;
+    --app-card: #1e293b;
+    --app-card-hover: #273449;
+
+    /*TEXT*/
+    --app-text: #f8fafc;
+    --app-text-muted: #94a3b8;
+    --app-heading: #ffffff;
+
+    /*BORDERS*/
+    --app-border: rgba(255, 255, 255, 0.08);
+
+    /*SIDEBAR*/
+    --app-sidebar-bg: #111827;
+    --app-sidebar-border: rgba(255, 255, 255, 0.06);
+
+    /*NAVBAR*/
+    --app-navbar-bg: rgba(15, 23, 42, 0.75);
+
+    /*INPUTS*/
+    --app-input-bg: #1e293b;
+    --app-input-border: rgba(255, 255, 255, 0.08);
+
+    /*SHADOWS*/
+
+    --app-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --app-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+
+    /*GLASSMORPHISM*/
+    --app-glass-bg: rgba(15, 23, 42, 0.65);
+    --app-glass-border: rgba(255, 255, 255, 0.08);
+
+    /*SIDEBAR*/
+    --app-sidebar-item-hover: rgba(99, 102, 241, 0.16);
+    --app-sidebar-item-active: rgba(99, 102, 241, 0.24);
+
+    /*SCROLLBAR*/
+    --app-scrollbar: rgba(255, 255, 255, 0.12);
+    --app-scrollbar-hover: rgba(255, 255, 255, 0.22);
+
+    /*BACKDROP*/
+    --app-backdrop: rgba(0, 0, 0, 0.6);
+
+    /*KANBAN*/
+    --app-kanban-column: #111827;
+
+    /*MODALS*/
+    --app-modal-bg: #1e293b;
+
+    /*DROPDOWNS*/
+    --app-dropdown-bg: #1e293b;
+    --app-dropdown-hover: rgba(99, 102, 241, 0.16);
+    --app-dropdown-item-color: #e2e8f0;
+    --app-dropdown-item-hover-color: #ffffff;
+    --app-dropdown-item-active-color: #a5b4fc;
+
+    /*HOVER STATES*/
+    --app-hover: rgba(255, 255, 255, 0.04);
+
+    /*SELECTION*/
+    --app-selection: rgba(99, 102, 241, 0.35);
+
+    /*DIVIDERS*/
+    --app-divider: rgba(255, 255, 255, 0.06);
+
+    --app-placeholder:
+    #94a3b8;
+}
+
+/*SYSTEM THEME*/
+@media (prefers-color-scheme: dark) {
+    [data-theme="system"] {
+        color-scheme: dark;
+        --app-bg: #0f172a;
+        --app-surface: #111827;
+        --app-card: #1e293b;
+        --app-card-hover: #273449;
+        --app-text: #f8fafc;
+        --app-text-muted: #94a3b8;
+        --app-heading: #ffffff;
+        --app-border: rgba(255, 255, 255, 0.08);
+        --app-sidebar-bg: #111827;
+        --app-sidebar-border: rgba(255, 255, 255, 0.06);
+        --app-navbar-bg: rgba(15, 23, 42, 0.75);
+        --app-input-bg: #1e293b;
+        --app-input-border: rgba(255, 255, 255, 0.08);
+        --app-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+        --app-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+        --app-dropdown-item-color:#e2e8f0;
+        --app-dropdown-item-hover-color:#ffffff;
+        --app-dropdown-item-active-color:#a5b4fc;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| SYSTEM THEME
+|--------------------------------------------------------------------------
+*/
+
+@media (prefers-color-scheme: dark) {
+
+    [data-theme="system"] {
+
+        /*
+        |--------------------------------------------------------------------------
+        | DROPDOWN ITEM COLORS
+        |--------------------------------------------------------------------------
+        */
+
+        --app-dropdown-item-color:
+            #e2e8f0;
+
+        --app-dropdown-item-hover-color:
+            #ffffff;
+        --app-dropdown-item-active-color:
+            #a5b4fc;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+
+    [data-theme="system"] {
+
+        /*
+        |--------------------------------------------------------------------------
+        | DROPDOWN ITEM COLORS
+        |--------------------------------------------------------------------------
+        */
+
+        --app-dropdown-item-color:
+            var(--app-text);
+
+        --app-dropdown-item-hover-color:
+            var(--app-heading);
+
+        --app-dropdown-item-active-color:
+            var(--app-primary);
+    }
+}
