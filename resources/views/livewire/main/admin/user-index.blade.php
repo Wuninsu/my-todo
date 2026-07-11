@@ -16,13 +16,22 @@
 
     </div>
 
+    {{-- ALERTS --}}
+    @if (session('success'))
+        <div class="alert alert-success rounded-4 border-0 mb-4">{{ session('success') }}</div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-danger rounded-4 border-0 mb-4">{{ session('error') }}</div>
+    @endif
+
     {{-- FILTERS --}}
     <div class="app-card p-3 mb-4">
 
         <div class="row g-3">
 
             {{-- SEARCH --}}
-            <div class="col-lg-8">
+            <div class="col-lg-6">
 
                 <div class="position-relative">
 
@@ -36,7 +45,7 @@
             </div>
 
             {{-- ROLE --}}
-            <div class="col-lg-4">
+            <div class="col-lg-3">
 
                 <select wire:model.live="role" class="form-select app-input">
 
@@ -53,6 +62,16 @@
                     </option>
 
                 </select>
+
+            </div>
+
+            {{-- TRASHED --}}
+            <div class="col-lg-3 d-flex align-items-center">
+
+                <div class="form-check">
+                    <input type="checkbox" wire:model.live="showTrashed" class="form-check-input" id="showTrashed">
+                    <label class="form-check-label" for="showTrashed">Show deactivated</label>
+                </div>
 
             </div>
 
@@ -205,38 +224,38 @@
 
                                 <ul class="dropdown-menu dropdown-menu-end">
 
-                                    <li>
-                                       
-                                            <a href="{{ route('admin.users.view', $user) }}" class="dropdown-item">
+                                    @if ($user->trashed())
+                                        <li>
+                                            <button type="button" class="dropdown-item"
+                                                wire:click="restore({{ $user->id }})">
+                                                <i class="bi bi-arrow-counterclockwise"></i>
+                                                Restore
+                                            </button>
+                                        </li>
+                                    @else
+                                        <li>
+                                            <a href="{{ route('admin.users.view', $user) }}" wire:navigate class="dropdown-item">
                                                 <i class="bi bi-eye"></i>
                                                 View
                                             </a>
+                                        </li>
 
-                                    </li>
+                                        <li>
+                                            <a href="{{ route('admin.users.edit', $user) }}" wire:navigate class="dropdown-item">
+                                                <i class="bi bi-pencil"></i>
+                                                Edit
+                                            </a>
+                                        </li>
 
-                                    <li>
-
-                                        <button class="dropdown-item">
-
-                                            <i class="bi bi-pencil"></i>
-
-                                            Edit
-
-                                        </button>
-
-                                    </li>
-
-                                    <li>
-
-                                        <button class="dropdown-item text-danger">
-
-                                            <i class="bi bi-trash"></i>
-
-                                            Delete
-
-                                        </button>
-
-                                    </li>
+                                        <li>
+                                            <button type="button" class="dropdown-item text-danger"
+                                                wire:click="delete({{ $user->id }})"
+                                                wire:confirm="Deactivate this user? Their data is kept and this can be undone.">
+                                                <i class="bi bi-trash"></i>
+                                                Delete
+                                            </button>
+                                        </li>
+                                    @endif
 
                                 </ul>
 

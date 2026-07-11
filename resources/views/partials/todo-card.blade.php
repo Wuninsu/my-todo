@@ -1,47 +1,103 @@
-<div class="app-card p-3">
+@php
+    $statusIcon = match ($todo->status) {
+        'doing' => 'bi-arrow-repeat',
+        'done' => 'bi-check-circle-fill',
+        default => 'bi-circle',
+    };
+
+    $statusBadgeClass = match ($todo->status) {
+        'doing' => 'app-badge-doing',
+        'done' => 'app-badge-done',
+        default => 'app-badge-todo',
+    };
+
+    $priorityLabel = ucfirst($todo->priority).' Priority';
+
+    $isOverdue = $todo->due_date
+        && $todo->due_date->isPast()
+        && ! $todo->due_date->isToday()
+        && ! in_array($todo->status, ['done', 'archived']);
+
+    $canMoveUp = $canMoveUp ?? false;
+    $canMoveDown = $canMoveDown ?? false;
+@endphp
+
+<div class="app-card p-3 {{ $isOverdue ? 'border-danger' : '' }}" wire:key="todo-{{ $todo->id }}">
 
     <div class="d-flex align-items-start justify-content-between">
 
         {{-- LEFT --}}
         <div class="d-flex gap-3">
 
-            {{-- CHECKBOX --}}
-            <button class="app-check-btn">
+            {{-- REORDER + CHECKBOX --}}
+            <div class="d-flex flex-column align-items-center gap-1">
 
-                <i class="bi bi-circle"></i>
+                <button type="button" class="btn app-icon-btn p-0" style="font-size: .75rem"
+                    wire:click="moveUp({{ $todo->id }})" title="Move up" @disabled(! $canMoveUp)>
+                    <i class="bi bi-chevron-up"></i>
+                </button>
 
-            </button>
+                <button type="button" class="app-check-btn" wire:click="toggleStatus({{ $todo->id }})"
+                    title="Cycle status">
+
+                    <i class="bi {{ $statusIcon }}"></i>
+
+                </button>
+
+                <button type="button" class="btn app-icon-btn p-0" style="font-size: .75rem"
+                    wire:click="moveDown({{ $todo->id }})" title="Move down" @disabled(! $canMoveDown)>
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+
+            </div>
 
             {{-- CONTENT --}}
             <div>
 
-                <h6 class="fw-semibold mb-1">
-                    Finish Offline Sync Engine
+                <h6 class="fw-semibold mb-1 {{ $todo->status === 'done' ? 'text-decoration-line-through text-muted' : '' }}">
+                    {{ $todo->title }}
                 </h6>
 
-                <p class="small mb-2">
-
-                    Build synchronization between
-                    IndexedDB and Laravel API.
-
-                </p>
+                @if ($todo->description)
+                    <p class="small mb-2">
+                        {{ \Illuminate\Support\Str::limit($todo->description, 120) }}
+                    </p>
+                @endif
 
                 <div class="d-flex flex-wrap gap-2">
 
-                    <span class="badge app-badge-doing">
-                        Doing
+                    <span class="badge {{ $statusBadgeClass }}">
+                        {{ ucfirst($todo->status) }}
                     </span>
 
                     <span class="badge app-badge-priority">
-                        High Priority
+                        {{ $priorityLabel }}
                     </span>
 
-                    <span class="badge bg-body-tertiary text-muted">
+                    @if ($todo->list)
+                        <span class="badge bg-body-tertiary text-muted">
+                            <span class="app-dot" style="background-color: {{ $todo->list->color ?? '#6c757d' }}"></span>
+                            {{ $todo->list->name }}
+                        </span>
+                    @endif
 
-                        <i class="bi bi-calendar-event"></i>
+                    @if ($todo->due_date)
+                        <span class="badge {{ $isOverdue ? 'bg-danger text-white' : 'bg-body-tertiary text-muted' }}">
+                            <i class="bi {{ $isOverdue ? 'bi-exclamation-circle' : 'bi-calendar-event' }}"></i>
+                            {{ $isOverdue ? 'Overdue' : ($todo->due_date->isToday() ? 'Today' : $todo->due_date->format('M j')) }}
+                        </span>
+                    @endif
 
-                        Tomorrow
-                    </span>
+                    @if ($todo->reminder_at)
+                        <span class="badge bg-body-tertiary text-muted">
+                            <i class="bi bi-bell"></i>
+                            {{ $todo->reminder_at->format('M j, g:ia') }}
+                        </span>
+                    @endif
+
+                    @foreach ($todo->tags as $tag)
+                        <span class="badge bg-body-tertiary text-muted">#{{ $tag->name }}</span>
+                    @endforeach
 
                 </div>
 
@@ -50,29 +106,39 @@
         </div>
 
         {{-- RIGHT --}}
-        <div class="dropdown">
+        <div class="d-flex align-items-center gap-1">
 
-            <button class="btn app-icon-btn" data-bs-toggle="dropdown">
-
-                <i class="bi bi-three-dots"></i>
-
+            <button type="button" class="btn app-icon-btn" wire:click="toggleFavorite({{ $todo->id }})"
+                title="Toggle favorite">
+                <i class="bi {{ $todo->is_favorite ? 'bi-star-fill text-warning' : 'bi-star' }}"></i>
             </button>
 
-            <ul class="dropdown-menu dropdown-menu-end">
+            <div class="dropdown">
 
-                <li>
-                    <button class="dropdown-item">
-                        Edit
-                    </button>
-                </li>
+                <button class="btn app-icon-btn" data-bs-toggle="dropdown">
 
-                <li>
-                    <button class="dropdown-item text-danger">
-                        Delete
-                    </button>
-                </li>
+                    <i class="bi bi-three-dots"></i>
 
-            </ul>
+                </button>
+
+                <ul class="dropdown-menu dropdown-menu-end">
+
+                    <li>
+                        <button type="button" class="dropdown-item" wire:click="editTodo({{ $todo->id }})">
+                            Edit
+                        </button>
+                    </li>
+
+                    <li>
+                        <button type="button" class="dropdown-item text-danger"
+                            wire:click="deleteTodo({{ $todo->id }})" wire:confirm="Delete this todo?">
+                            Delete
+                        </button>
+                    </li>
+
+                </ul>
+
+            </div>
 
         </div>
 

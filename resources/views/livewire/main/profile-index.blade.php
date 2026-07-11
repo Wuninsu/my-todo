@@ -4,39 +4,41 @@
         $user = auth()->user();
     @endphp
 
+    {{-- ALERT --}}
+    @if (session('success'))
+        <div class="alert alert-success rounded-4 border-0 mb-4">{{ session('success') }}</div>
+    @endif
+
     {{-- HEADER --}}
     <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
 
         <div class="d-flex align-items-center gap-3">
 
             {{-- AVATAR --}}
-            <div class="app-user-profile-avatar">
-
-                {{ strtoupper(substr($user->name, 0, 1)) }}
-
-            </div>
+            @if ($user->avatar)
+                <img src="{{ \Illuminate\Support\Facades\Storage::url($user->avatar) }}" alt="{{ $user->name }}"
+                    class="app-user-profile-avatar" style="object-fit: cover;">
+            @else
+                <div class="app-user-profile-avatar">
+                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                </div>
+            @endif
 
             {{-- INFO --}}
             <div>
 
                 <h4 class="fw-bold mb-1">
-
                     {{ $user->name }}
-
                 </h4>
 
                 <div class="d-flex flex-wrap align-items-center gap-2">
 
                     <span class="text-muted">
-
                         {{ $user->email }}
-
                     </span>
 
                     <span class="badge app-role-badge">
-
                         {{ ucfirst($user->role) }}
-
                     </span>
 
                 </div>
@@ -46,20 +48,14 @@
         </div>
 
         {{-- ACTION --}}
-        <div>
-
-            {{-- <a
-                href="{{ route('profile.edit') }}"
-                wire:navigate
-                class="btn app-btn-primary rounded-4">
-
-                <i class="bi bi-pencil-square"></i>
-
-                Edit Profile
-
-            </a> --}}
-
-        </div>
+        @unless ($editing)
+            <div>
+                <button type="button" class="btn app-btn-primary rounded-4" wire:click="startEditing">
+                    <i class="bi bi-pencil-square"></i>
+                    Edit Profile
+                </button>
+            </div>
+        @endunless
 
     </div>
 
@@ -185,102 +181,134 @@
     </div>
 
     {{-- DETAILS --}}
-    <div class="row g-4">
+    <div class="row g-4 mb-4">
 
-        {{-- PROFILE INFO --}}
+        {{-- PROFILE INFO / EDIT FORM --}}
         <div class="col-xl-4">
 
             <div class="app-card p-4 h-100">
 
-                <h5 class="fw-bold mb-4">
+                @if ($editing)
 
-                    Profile Information
+                    <h5 class="fw-bold mb-4">Edit Profile</h5>
 
-                </h5>
+                    <form wire:submit="save" class="d-flex flex-column gap-3">
 
-                <div class="d-flex flex-column gap-4">
+                        <div>
+                            <label class="form-label">Full Name</label>
+                            <input type="text" wire:model="name" class="form-control app-input">
+                            @error('name') <div class="small text-danger">{{ $message }}</div> @enderror
+                        </div>
 
-                    <div>
+                        <div>
+                            <label class="form-label">Email Address</label>
+                            <input type="email" wire:model="email" class="form-control app-input">
+                            @error('email') <div class="small text-danger">{{ $message }}</div> @enderror
+                        </div>
 
-                        <div class="small text-muted mb-1">
+                        <div>
+                            <label class="form-label">Timezone</label>
+                            <input type="text" wire:model="timezone" class="form-control app-input" placeholder="UTC">
+                            @error('timezone') <div class="small text-danger">{{ $message }}</div> @enderror
+                        </div>
 
-                            Full Name
+                        <div>
+                            <label class="form-label">Theme</label>
+                            <select wire:model="theme" class="form-select app-input">
+                                <option value="light">Light</option>
+                                <option value="dark">Dark</option>
+                            </select>
+                            @error('theme') <div class="small text-danger">{{ $message }}</div> @enderror
+                        </div>
+
+                        <div>
+                            <label class="form-label">Avatar</label>
+                            <input type="file" wire:model="avatar" class="form-control app-input" accept="image/*">
+                            <div wire:loading wire:target="avatar" class="small text-muted mt-1">Uploading...</div>
+                            @error('avatar') <div class="small text-danger">{{ $message }}</div> @enderror
+                            @if ($avatar)
+                                <img src="{{ $avatar->temporaryUrl() }}" class="rounded-circle mt-2" width="60" height="60" style="object-fit: cover;">
+                            @endif
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn app-btn-primary rounded-4 flex-grow-1">Save</button>
+                            <button type="button" class="btn btn-outline-secondary rounded-4" wire:click="cancelEditing">Cancel</button>
+                        </div>
+
+                    </form>
+
+                @else
+
+                    <h5 class="fw-bold mb-4">
+                        Profile Information
+                    </h5>
+
+                    <div class="d-flex flex-column gap-4">
+
+                        <div>
+
+                            <div class="small text-muted mb-1">
+                                Full Name
+                            </div>
+
+                            <div class="fw-semibold">
+                                {{ $user->name }}
+                            </div>
 
                         </div>
 
-                        <div class="fw-semibold">
+                        <div>
 
-                            {{ $user->name }}
+                            <div class="small text-muted mb-1">
+                                Email Address
+                            </div>
+
+                            <div class="fw-semibold">
+                                {{ $user->email }}
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <div class="small text-muted mb-1">
+                                Theme
+                            </div>
+
+                            <div class="fw-semibold">
+                                {{ ucfirst($user->theme) }}
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <div class="small text-muted mb-1">
+                                Timezone
+                            </div>
+
+                            <div class="fw-semibold">
+                                {{ $user->timezone }}
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <div class="small text-muted mb-1">
+                                Joined
+                            </div>
+
+                            <div class="fw-semibold">
+                                {{ $user->created_at->format('M d, Y') }}
+                            </div>
 
                         </div>
 
                     </div>
 
-                    <div>
-
-                        <div class="small text-muted mb-1">
-
-                            Email Address
-
-                        </div>
-
-                        <div class="fw-semibold">
-
-                            {{ $user->email }}
-
-                        </div>
-
-                    </div>
-
-                    <div>
-
-                        <div class="small text-muted mb-1">
-
-                            Theme
-
-                        </div>
-
-                        <div class="fw-semibold">
-
-                            {{ ucfirst($user->theme) }}
-
-                        </div>
-
-                    </div>
-
-                    <div>
-
-                        <div class="small text-muted mb-1">
-
-                            Timezone
-
-                        </div>
-
-                        <div class="fw-semibold">
-
-                            {{ $user->timezone }}
-
-                        </div>
-
-                    </div>
-
-                    <div>
-
-                        <div class="small text-muted mb-1">
-
-                            Joined
-
-                        </div>
-
-                        <div class="fw-semibold">
-
-                            {{ $user->created_at->format('M d, Y') }}
-
-                        </div>
-
-                    </div>
-
-                </div>
+                @endif
 
             </div>
 
@@ -418,6 +446,98 @@
                     </div>
 
                 </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {{-- PASSWORD + DEVICES --}}
+    <div class="row g-4">
+
+        {{-- PASSWORD --}}
+        <div class="col-xl-4">
+
+            <div class="app-card p-4 h-100">
+
+                <h5 class="fw-bold mb-4">Password</h5>
+
+                @if ($changingPassword)
+
+                    <form wire:submit="changePassword" class="d-flex flex-column gap-3">
+
+                        <div>
+                            <label class="form-label">Current Password</label>
+                            <input type="password" wire:model="current_password" class="form-control app-input">
+                            @error('current_password') <div class="small text-danger">{{ $message }}</div> @enderror
+                        </div>
+
+                        <div>
+                            <label class="form-label">New Password</label>
+                            <input type="password" wire:model="password" class="form-control app-input">
+                            @error('password') <div class="small text-danger">{{ $message }}</div> @enderror
+                        </div>
+
+                        <div>
+                            <label class="form-label">Confirm New Password</label>
+                            <input type="password" wire:model="password_confirmation" class="form-control app-input">
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn app-btn-primary rounded-4 flex-grow-1">Update Password</button>
+                            <button type="button" class="btn btn-outline-secondary rounded-4"
+                                wire:click="$set('changingPassword', false)">Cancel</button>
+                        </div>
+
+                    </form>
+
+                @else
+
+                    <p class="text-muted mb-3">Change your account password.</p>
+
+                    <button type="button" class="btn app-btn-primary rounded-4" wire:click="$set('changingPassword', true)">
+                        <i class="bi bi-key"></i>
+                        Change Password
+                    </button>
+
+                @endif
+
+            </div>
+
+        </div>
+
+        {{-- DEVICES --}}
+        <div class="col-xl-8">
+
+            <div class="app-card p-4 h-100">
+
+                <h5 class="fw-bold mb-4">Connected Devices</h5>
+
+                @forelse ($devices as $device)
+                    <div class="d-flex align-items-center justify-content-between py-2 {{ ! $loop->last ? 'border-bottom' : '' }}"
+                        wire:key="device-{{ $device->id }}">
+
+                        <div>
+                            <div class="fw-semibold">{{ $device->device_name }}</div>
+                            <div class="small text-muted">
+                                {{ $device->platform ?? 'Unknown platform' }} &middot;
+                                last seen {{ $device->last_seen_at?->diffForHumans() ?? 'never' }}
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-sm btn-outline-danger" wire:click="revokeDevice({{ $device->id }})"
+                            wire:confirm="Revoke this device? It will need to sync in again.">
+                            Revoke
+                        </button>
+
+                    </div>
+                @empty
+                    <div class="text-center text-muted py-4">
+                        <i class="bi bi-phone fs-1 d-block mb-2"></i>
+                        No devices connected yet. Device sync is coming in a later phase.
+                    </div>
+                @endforelse
 
             </div>
 

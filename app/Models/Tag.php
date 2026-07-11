@@ -44,6 +44,6 @@ class Tag extends Model
 
     public function todos()
     {
-        return $this->belongsToMany(Todo::class);
+        return $this->belongsToMany(Todo::class, 'tag_todos');
     }
 }

@@ -1,8 +1,9 @@
 const STORAGE_KEY = 'todo-theme';
 
 export function initializeTheme() {
-    const savedTheme = localStorage.getItem(STORAGE_KEY) || 'light';
-    applyTheme(savedTheme);
+    const serverTheme = document.documentElement.getAttribute('data-theme');
+    const theme = serverTheme || localStorage.getItem(STORAGE_KEY) || 'light';
+    applyTheme(theme);
 
     // Theme toggle button
     const themeToggleBtn = document.querySelector('[data-theme-toggle]');
@@ -22,7 +23,7 @@ export function toggleTheme() {
     applyTheme(newTheme);
 }
 
-function applyTheme(theme) {
+export function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
 
     localStorage.setItem(STORAGE_KEY, theme);

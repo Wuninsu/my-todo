@@ -1,6 +1,6 @@
 <nav class="app-mobile-nav d-lg-none">
 
-    <a href="#" class="active">
+    <a href="{{ route('dashboard') }}" wire:navigate class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
 
         <i class="bi bi-grid"></i>
 
@@ -8,7 +8,7 @@
 
     </a>
 
-    <a href="#">
+    <a href="#" onclick="event.preventDefault(); window.Livewire.dispatch('filter-selected', { filter: 'today' })">
 
         <i class="bi bi-calendar-event"></i>
 
@@ -16,7 +16,7 @@
 
     </a>
 
-    <a href="#">
+    <a href="#" onclick="event.preventDefault(); window.Livewire.dispatch('open-create-todo')">
 
         <i class="bi bi-plus-circle-fill"></i>
 
@@ -24,7 +24,7 @@
 
     </a>
 
-    <a href="#">
+    <a href="#" onclick="event.preventDefault(); window.Livewire.dispatch('filter-selected', { filter: 'favorites' })">
 
         <i class="bi bi-star"></i>
 
@@ -32,7 +32,7 @@
 
     </a>
 
-    <a href="#">
+    <a href="{{ route('profile') }}" wire:navigate class="{{ request()->routeIs('profile') ? 'active' : '' }}">
 
         <i class="bi bi-person"></i>
 

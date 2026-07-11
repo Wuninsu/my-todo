@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Livewire\Actions\Logout;
 use App\Livewire\Auth\ConfirmPassword;
 use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\Login;
@@ -21,8 +22,6 @@ Route::middleware('guest')->group(function () {
 //     return redirect()->route('lock.screen');
 // })->name('lock');
 
-
-
 // Route::middleware('auth')->group(function () {
 //     Route::get('/lock-screen', \App\Livewire\Auth\LockScreen::class)
 //     ->name('lock.screen');
@@ -37,5 +36,6 @@ Route::middleware('guest')->group(function () {
 //         ->name('password.confirm');
 // });
 
-// Route::post('logout', App\Livewire\Actions\Logout::class)
-//     ->name('logout');
+Route::middleware('auth')->group(function () {
+    Route::post('logout', Logout::class)->name('logout');
+});

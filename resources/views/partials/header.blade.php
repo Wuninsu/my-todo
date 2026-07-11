@@ -1,5 +1,16 @@
 <header class="app-header app-glass">
 
+    @php
+        [$headerTitle, $headerSubtitle] = match (true) {
+            request()->routeIs('admin.dashboard') => ['Admin Overview', 'Application-wide stats and sync activity'],
+            request()->routeIs('admin.users.edit') => ['Edit User', 'Update user account information'],
+            request()->routeIs('admin.users.view') => ['User Details', 'View user account details'],
+            request()->routeIs('admin.users') => ['Users', 'Manage application users'],
+            request()->routeIs('profile') => ['My Profile', 'Manage your account settings'],
+            default => ['Dashboard', 'Manage your tasks efficiently'],
+        };
+    @endphp
+
     <div class="d-flex align-items-center justify-content-between">
 
         {{-- LEFT --}}
@@ -12,14 +23,14 @@
 
             </button>
 
-            <div>
+            <div class="d-none d-lg-block">
 
                 <h5 class="fw-bold mb-0">
-                    Dashboard
+                    {{ $headerTitle }}
                 </h5>
 
                 <div class="small">
-                    Manage your tasks efficiently
+                    {{ $headerSubtitle }}
                 </div>
 
             </div>
@@ -31,9 +42,8 @@
 
             {{-- THEME --}}
 
-            <button class="btn app-icon-btn" data-theme-toggle>
-                <i class="bi bi-moon-stars" data-theme-icon></i>
-            </button>
+            <livewire:main.theme-toggle />
+
             {{-- PROFILE --}}
             {{-- <button class="btn app-icon-btn">
 
@@ -45,6 +55,14 @@
                 class="app-icon-btn">
                 <i class="bi bi-person-circle"></i>
             </a>
+
+            {{-- LOGOUT --}}
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="btn app-icon-btn" title="Log out">
+                    <i class="bi bi-box-arrow-right"></i>
+                </button>
+            </form>
 
         </div>
 

@@ -2,13 +2,14 @@
 
 namespace App\Livewire\Auth;
 
+use App\Models\TodoList;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
-use Livewire\Component;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Livewire\Component;
 
 #[Layout('layouts.auth')]
 class Register extends Component
@@ -20,7 +21,7 @@ class Register extends Component
     public string $password = '';
 
     public string $password_confirmation = '';
-    
+
     protected function rules(): array
     {
         return [
@@ -45,7 +46,6 @@ class Register extends Component
         ];
     }
 
-  
     public function register()
     {
         $validated = $this->validate();
@@ -61,8 +61,18 @@ class Register extends Component
             'device_uuid' => Str::uuid(),
         ]);
 
+        TodoList::create([
+            'uuid' => Str::uuid(),
+            'user_id' => $user->id,
+            'name' => 'My Tasks',
+            'is_default' => true,
+            'version' => 1,
+            'client_updated_at' => now(),
+        ]);
+
         Auth::login($user);
         request()->session()->regenerate();
+
         return redirect()->intended('/');
     }
 

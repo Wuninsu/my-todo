@@ -19,7 +19,9 @@
 
                 <i class="bi bi-search app-search-icon"></i>
 
-                <input type="text" class="form-control app-input ps-5" placeholder="Search todos...">
+                <input type="text" class="form-control app-input ps-5" placeholder="Search todos... (press /)"
+                    data-global-search
+                    onchange="window.Livewire.dispatch('search-changed', { term: this.value })">
 
             </div>
 
@@ -35,25 +37,29 @@
 
             <nav class="d-flex flex-column gap-1">
 
-                <a href="#" class="app-sidebar-item active">
+                <a href="{{ route('dashboard') }}" wire:navigate class="app-sidebar-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
 
                     <i class="bi bi-grid"></i>
 
                     <span>Dashboard</span>
 
                 </a>
-                {{-- @php
-                $isAcademicActive = request()->routeIs([
-                'admin.*',
-                ]);
-                @endphp --}}
-                <a href="{{route('admin.users')}}"
-                    class="app-sidebar-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                    <i class="bi bi-people"></i>
-                    <span>Users</span>
-                </a>
 
-                <a href="#" class="app-sidebar-item">
+                @if (auth()->user()?->role === 'admin')
+                    <a href="{{ route('admin.dashboard') }}" wire:navigate
+                        class="app-sidebar-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                        <i class="bi bi-speedometer2"></i>
+                        <span>Admin Overview</span>
+                    </a>
+
+                    <a href="{{route('admin.users')}}" wire:navigate
+                        class="app-sidebar-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                        <i class="bi bi-people"></i>
+                        <span>Users</span>
+                    </a>
+                @endif
+
+                <a href="#" onclick="event.preventDefault(); window.Livewire.dispatch('filter-selected', { filter: 'today' })" class="app-sidebar-item">
 
                     <i class="bi bi-sun"></i>
 
@@ -61,7 +67,7 @@
 
                 </a>
 
-                <a href="#" class="app-sidebar-item">
+                <a href="#" onclick="event.preventDefault(); window.Livewire.dispatch('filter-selected', { filter: 'upcoming' })" class="app-sidebar-item">
 
                     <i class="bi bi-calendar-event"></i>
 
@@ -69,7 +75,7 @@
 
                 </a>
 
-                <a href="#" class="app-sidebar-item">
+                <a href="#" onclick="event.preventDefault(); window.Livewire.dispatch('filter-selected', { filter: 'completed' })" class="app-sidebar-item">
 
                     <i class="bi bi-check2-circle"></i>
 
@@ -77,7 +83,7 @@
 
                 </a>
 
-                <a href="#" class="app-sidebar-item">
+                <a href="#" onclick="event.preventDefault(); window.Livewire.dispatch('filter-selected', { filter: 'favorites' })" class="app-sidebar-item">
 
                     <i class="bi bi-star"></i>
 
@@ -88,37 +94,7 @@
             </nav>
 
             {{-- LISTS --}}
-            <div class="small text-uppercase text-muted fw-semibold mt-5 mb-2">
-                Lists
-            </div>
-
-            <nav class="d-flex flex-column gap-1 pb-3">
-
-                <a href="#" class="app-sidebar-item">
-
-                    <span class="app-dot bg-primary"></span>
-
-                    <span>Personal</span>
-
-                </a>
-
-                <a href="#" class="app-sidebar-item">
-
-                    <span class="app-dot bg-success"></span>
-
-                    <span>Work</span>
-
-                </a>
-
-                <a href="#" class="app-sidebar-item">
-
-                    <span class="app-dot bg-warning"></span>
-
-                    <span>School</span>
-
-                </a>
-
-            </nav>
+            <livewire:main.sidebar-lists :key="'sidebar-lists-'.($variant ?? 'default')" />
 
         </div>
 
@@ -127,7 +103,8 @@
     {{-- FOOTER --}}
     <div class="p-3 border-top sidebar-footer mt-auto">
 
-        <button class="btn app-btn-primary w-100 rounded-4">
+        <button type="button" class="btn app-btn-primary w-100 rounded-4"
+            onclick="window.Livewire.dispatch('open-create-todo')">
 
             <i class="bi bi-plus-lg"></i>
 

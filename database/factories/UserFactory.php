@@ -25,11 +25,17 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
+            'uuid' => Str::uuid(),
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'timezone' => 'UTC',
+            'theme' => 'light',
+            'role' => 'user',
+            'version' => 1,
+            'client_updated_at' => now(),
         ];
     }
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+    data-theme="{{ auth()->check() && auth()->user()->theme === 'dark' ? 'dark' : 'light' }}">
 
 <head>
     <meta charset="utf-8">
@@ -18,7 +19,7 @@
         {{-- DESKTOP SIDEBAR --}}
         <aside class="app-sidebar d-none d-lg-flex">
 
-            @include('partials.sidebar')
+            @include('partials.sidebar', ['variant' => 'desktop'])
 
         </aside>
 
@@ -27,7 +28,7 @@
 
             <div class="offcanvas-body p-0">
 
-                @include('partials.sidebar')
+                @include('partials.sidebar', ['variant' => 'mobile'])
 
             </div>
 
@@ -54,9 +55,6 @@
 
     {{-- MOBILE NAV --}}
     @include('partials.mobile-nav')
-
-    @livewireScripts
-
 
     @livewireScripts
 </body>

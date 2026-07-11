@@ -288,9 +288,19 @@ body {
     font-size: 1.2rem;
 }
 
+.app-badge-todo {
+    background:rgba(108, 117, 125, 0.15);
+    color:#6c757d;
+}
+
 .app-badge-doing {
     background:rgba(245, 158, 11, 0.15);
     color:#f59e0b;
+}
+
+.app-badge-done {
+    background:rgba(34, 197, 94, 0.15);
+    color:#22c55e;
 }
 
 .app-badge-priority {
