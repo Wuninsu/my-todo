@@ -56,6 +56,10 @@
     {{-- MOBILE NAV --}}
     @include('partials.mobile-nav')
 
+    {{-- GLOBAL TOASTS + CONFIRM DIALOG --}}
+    @include('partials.toasts')
+    @include('partials.confirm-dialog')
+
     @livewireScripts
 </body>
 

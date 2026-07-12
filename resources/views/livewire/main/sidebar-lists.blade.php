@@ -20,11 +20,11 @@
             <div class="d-flex align-items-center app-sidebar-item p-0 {{ $activeListUuid === $list->uuid ? 'active' : '' }}">
 
                 <a href="#" wire:click.prevent="$dispatch('list-selected', { uuid: '{{ $list->uuid }}' })"
-                    class="d-flex align-items-center gap-2 flex-grow-1 text-decoration-none text-reset px-2 py-1">
-                    <span class="app-dot" style="background-color: {{ $list->color ?? '#6c757d' }}"></span>
-                    <span class="flex-grow-1">{{ $list->name }}</span>
+                    class="d-flex align-items-center gap-2 flex-grow-1 min-width-0 text-decoration-none text-reset px-2 py-1">
+                    <span class="app-dot flex-shrink-0" style="background-color: {{ $list->color ?? '#6c757d' }}"></span>
+                    <span class="flex-grow-1 text-truncate">{{ $list->name }}</span>
                     @if ($list->todos_count > 0)
-                        <span class="badge bg-body-tertiary text-muted">{{ $list->todos_count }}</span>
+                        <span class="badge bg-body-tertiary text-muted flex-shrink-0">{{ $list->todos_count }}</span>
                     @endif
                 </a>
 
@@ -41,8 +41,7 @@
                             </li>
                             <li>
                                 <button type="button" class="dropdown-item text-danger"
-                                    wire:click="delete({{ $list->id }})"
-                                    wire:confirm="Delete this list? Its todos will move to My Tasks.">
+                                    wire:click="delete({{ $list->id }})">
                                     Delete
                                 </button>
                             </li>
@@ -65,7 +64,12 @@
             <input type="color" wire:model="color" class="form-control form-control-sm form-control-color mb-2">
 
             <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-sm app-btn-primary flex-grow-1">Save</button>
+                <button type="submit" class="btn btn-sm app-btn-primary flex-grow-1" wire:loading.attr="disabled" wire:target="save">
+                    <span wire:loading.remove wire:target="save">Save</span>
+                    <span wire:loading wire:target="save">
+                        <span class="spinner-border spinner-border-sm"></span>
+                    </span>
+                </button>
                 <button type="button" class="btn btn-sm btn-outline-secondary"
                     wire:click="$set('showForm', false)">Cancel</button>
             </div>

@@ -2,13 +2,15 @@
 
 namespace App\Livewire\Main;
 
-use App\Models\TodoList;
-use Illuminate\Support\Str;
+use App\Services\TodoListService;
+use App\Traits\TryAction;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class SidebarLists extends Component
 {
+    use TryAction;
+
     public ?string $activeListUuid = null;
 
     public bool $showForm = false;
@@ -40,62 +42,48 @@ class SidebarLists extends Component
         $this->showForm = true;
     }
 
-    public function startEdit(int $listId): void
+    public function startEdit(int $listId, TodoListService $lists): void
     {
-        $list = TodoList::findOrFail($listId);
-        $this->authorize('update', $list);
+        $this->tryAction(function () use ($lists, $listId) {
+            $list = $lists->findForEdit($listId);
 
-        $this->editingListId = $list->id;
-        $this->name = $list->name;
-        $this->color = $list->color ?? '#0d6efd';
-        $this->showForm = true;
+            $this->editingListId = $list->id;
+            $this->name = $list->name;
+            $this->color = $list->color ?? '#0d6efd';
+            $this->showForm = true;
+        }, 'Could not open that list.');
     }
 
-    public function save(): void
+    public function save(TodoListService $lists): void
     {
         $validated = $this->validate();
+        $wasEditing = (bool) $this->editingListId;
 
-        if ($this->editingListId) {
-            $list = TodoList::findOrFail($this->editingListId);
-            $this->authorize('update', $list);
+        $this->tryAction(function () use ($lists, $validated, $wasEditing) {
+            if ($this->editingListId) {
+                $lists->update($this->editingListId, $validated);
+            } else {
+                $lists->create(auth()->user(), $validated);
+            }
 
-            $list->update([
-                'name' => $validated['name'],
-                'color' => $validated['color'],
-                'version' => $list->version + 1,
-                'client_updated_at' => now(),
-            ]);
-        } else {
-            auth()->user()->todoLists()->create([
-                'uuid' => Str::uuid(),
-                'name' => $validated['name'],
-                'color' => $validated['color'],
-                'version' => 1,
-                'client_updated_at' => now(),
-            ]);
-        }
+            $this->reset(['showForm', 'editingListId', 'name']);
+            $this->color = '#0d6efd';
 
-        $this->reset(['showForm', 'editingListId', 'name']);
-        $this->color = '#0d6efd';
+            $this->dispatch('toast', type: 'success', message: $wasEditing ? 'List renamed.' : 'List created.');
+        }, 'Could not save the list.');
     }
 
-    public function delete(int $listId): void
+    public function delete(int $listId, TodoListService $lists): void
     {
-        $list = TodoList::findOrFail($listId);
-        $this->authorize('delete', $list);
+        $this->tryAction(function () use ($lists, $listId) {
+            $list = $lists->delete(auth()->user(), $listId);
 
-        if ($list->is_default) {
-            return;
-        }
+            if ($this->activeListUuid === $list->uuid) {
+                $this->dispatch('list-selected', uuid: null);
+            }
 
-        $defaultList = auth()->user()->todoLists()->where('is_default', true)->first();
-
-        $list->todos()->update(['todo_list_id' => $defaultList?->id]);
-        $list->delete();
-
-        if ($this->activeListUuid === $list->uuid) {
-            $this->dispatch('list-selected', uuid: null);
-        }
+            $this->dispatch('toast', type: 'success', message: 'List deleted.');
+        }, 'Could not delete the list.');
     }
 
     public function render()

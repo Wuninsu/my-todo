@@ -30,6 +30,7 @@ return new class extends Migration
             $table->unsignedBigInteger('version')->default(1);
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

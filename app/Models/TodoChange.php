@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TodoChange extends Model
 {
-   use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'uuid',
@@ -31,7 +32,6 @@ class TodoChange extends Model
         ];
     }
 
-  
     public function todo()
     {
         return $this->belongsTo(Todo::class);
@@ -46,5 +46,4 @@ class TodoChange extends Model
     {
         return $this->belongsTo(Device::class);
     }
-
 }

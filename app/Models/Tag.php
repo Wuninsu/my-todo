@@ -46,4 +46,25 @@ class Tag extends Model
     {
         return $this->belongsToMany(Todo::class, 'tag_todos');
     }
+
+    public function isSystem(): bool
+    {
+        return is_null($this->user_id);
+    }
+
+    public function scopeSystem($query)
+    {
+        return $query->whereNull('user_id');
+    }
+
+    /**
+     * A user's own tags plus every system tag — the full set of tags
+     * available for them to use or choose from.
+     */
+    public function scopeAvailableTo($query, User $user)
+    {
+        return $query->where(function ($q) use ($user) {
+            $q->where('user_id', $user->id)->orWhereNull('user_id');
+        });
+    }
 }

@@ -27,6 +27,7 @@ return new class extends Migration
             $table->timestamp('synced_at')->nullable();
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

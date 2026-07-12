@@ -2,11 +2,9 @@
 
 namespace App\Livewire\Auth;
 
-use App\Models\TodoList;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use App\Services\AuthService;
+use App\Traits\TryAction;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -14,6 +12,8 @@ use Livewire\Component;
 #[Layout('layouts.auth')]
 class Register extends Component
 {
+    use TryAction;
+
     public string $name = '';
 
     public string $email = '';
@@ -46,34 +46,17 @@ class Register extends Component
         ];
     }
 
-    public function register()
+    public function register(AuthService $auth)
     {
         $validated = $this->validate();
 
-        $user = User::create([
-            'uuid' => Str::uuid(),
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => $validated['password'],
-            'is_synced' => false,
-            'version' => 1,
-            'client_updated_at' => now(),
-            'device_uuid' => Str::uuid(),
-        ]);
+        return $this->tryAction(function () use ($auth, $validated) {
+            $user = $auth->register($validated);
 
-        TodoList::create([
-            'uuid' => Str::uuid(),
-            'user_id' => $user->id,
-            'name' => 'My Tasks',
-            'is_default' => true,
-            'version' => 1,
-            'client_updated_at' => now(),
-        ]);
+            session()->regenerate();
 
-        Auth::login($user);
-        request()->session()->regenerate();
-
-        return redirect()->intended('/');
+            return redirect()->intended($auth->redirectPathFor($user));
+        }, 'Something went wrong while creating your account. Please try again.');
     }
 
     #[Title('Register')]

@@ -2,11 +2,15 @@
 
 namespace App\Livewire\Main;
 
+use App\Services\ProfileService;
+use App\Traits\TryAction;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class ThemeToggle extends Component
 {
+    use TryAction;
+
     public string $theme;
 
     public function mount(): void
@@ -14,18 +18,17 @@ class ThemeToggle extends Component
         $this->theme = Auth::user()->theme === 'dark' ? 'dark' : 'light';
     }
 
-    public function toggle(): void
+    public function toggle(ProfileService $profiles): void
     {
-        $this->theme = $this->theme === 'dark' ? 'light' : 'dark';
+        $next = $this->theme === 'dark' ? 'light' : 'dark';
 
-        $user = Auth::user();
-        $user->update([
-            'theme' => $this->theme,
-            'version' => $user->version + 1,
-            'client_updated_at' => now(),
-        ]);
+        $this->tryAction(function () use ($profiles, $next) {
+            $profiles->setTheme(Auth::user(), $next);
 
-        $this->dispatch('theme-changed', theme: $this->theme);
+            $this->theme = $next;
+
+            $this->dispatch('theme-changed', theme: $this->theme);
+        }, 'Could not change the theme.');
     }
 
     public function render()

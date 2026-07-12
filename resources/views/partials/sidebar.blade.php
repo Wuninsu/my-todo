@@ -1,16 +1,20 @@
+@php
+    $activeFilter = request()->routeIs('dashboard') ? request()->query('filter') : null;
+@endphp
+
 <div class="d-flex flex-column h-100">
 
-    {{-- CONTENT GROUP --}}
-    <div class="flex-grow-1 d-flex flex-column min-vh-0">
+    {{-- LOGO (fixed at top) --}}
+    <div class="p-4 flex-shrink-0">
 
-        {{-- LOGO --}}
-        <div class="p-4">
+        <h4 class="fw-bold mb-0">
+            TodoFlow
+        </h4>
 
-            <h4 class="fw-bold mb-0">
-                TodoFlow
-            </h4>
+    </div>
 
-        </div>
+    {{-- SCROLLABLE: SEARCH + NAVIGATION --}}
+    <div class="flex-grow-1 overflow-auto min-vh-0">
 
         {{-- SEARCH --}}
         <div class="px-3 mb-4">
@@ -20,15 +24,14 @@
                 <i class="bi bi-search app-search-icon"></i>
 
                 <input type="text" class="form-control app-input ps-5" placeholder="Search todos... (press /)"
-                    data-global-search
-                    onchange="window.Livewire.dispatch('search-changed', { term: this.value })">
+                    data-global-search onchange="window.Livewire.dispatch('search-changed', { term: this.value })">
 
             </div>
 
         </div>
 
         {{-- NAVIGATION --}}
-        <div class="px-3 flex-grow-1 overflow-auto">
+        <div class="px-3">
 
             {{-- WORKSPACE --}}
             <div class="small text-uppercase text-muted fw-semibold mb-2">
@@ -37,12 +40,25 @@
 
             <nav class="d-flex flex-column gap-1">
 
-                <a href="{{ route('dashboard') }}" wire:navigate class="app-sidebar-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                <a href="{{ route('dashboard') }}" wire:navigate
+                    class="app-sidebar-item {{ request()->routeIs('dashboard') && !$activeFilter ? 'active' : '' }}">
 
                     <i class="bi bi-grid"></i>
 
                     <span>Dashboard</span>
 
+                </a>
+
+                <a href="{{ route('tags') }}" wire:navigate
+                    class="app-sidebar-item {{ request()->routeIs('tags') ? 'active' : '' }}">
+                    <i class="bi bi-tags"></i>
+                    <span>Tags</span>
+                </a>
+
+                <a href="{{ route('trash') }}" wire:navigate
+                    class="app-sidebar-item {{ request()->routeIs('trash') ? 'active' : '' }}">
+                    <i class="bi bi-trash"></i>
+                    <span>Trash</span>
                 </a>
 
                 @if (auth()->user()?->role === 'admin')
@@ -52,14 +68,15 @@
                         <span>Admin Overview</span>
                     </a>
 
-                    <a href="{{route('admin.users')}}" wire:navigate
+                    <a href="{{ route('admin.users') }}" wire:navigate
                         class="app-sidebar-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                         <i class="bi bi-people"></i>
                         <span>Users</span>
                     </a>
                 @endif
 
-                <a href="#" onclick="event.preventDefault(); window.Livewire.dispatch('filter-selected', { filter: 'today' })" class="app-sidebar-item">
+                <a href="{{ route('dashboard', ['filter' => 'today']) }}" wire:navigate
+                    class="app-sidebar-item {{ $activeFilter === 'today' ? 'active' : '' }}">
 
                     <i class="bi bi-sun"></i>
 
@@ -67,7 +84,8 @@
 
                 </a>
 
-                <a href="#" onclick="event.preventDefault(); window.Livewire.dispatch('filter-selected', { filter: 'upcoming' })" class="app-sidebar-item">
+                <a href="{{ route('dashboard', ['filter' => 'upcoming']) }}" wire:navigate
+                    class="app-sidebar-item {{ $activeFilter === 'upcoming' ? 'active' : '' }}">
 
                     <i class="bi bi-calendar-event"></i>
 
@@ -75,7 +93,8 @@
 
                 </a>
 
-                <a href="#" onclick="event.preventDefault(); window.Livewire.dispatch('filter-selected', { filter: 'completed' })" class="app-sidebar-item">
+                <a href="{{ route('dashboard', ['filter' => 'completed']) }}" wire:navigate
+                    class="app-sidebar-item {{ $activeFilter === 'completed' ? 'active' : '' }}">
 
                     <i class="bi bi-check2-circle"></i>
 
@@ -83,7 +102,8 @@
 
                 </a>
 
-                <a href="#" onclick="event.preventDefault(); window.Livewire.dispatch('filter-selected', { filter: 'favorites' })" class="app-sidebar-item">
+                <a href="{{ route('dashboard', ['filter' => 'favorites']) }}" wire:navigate
+                    class="app-sidebar-item {{ $activeFilter === 'favorites' ? 'active' : '' }}">
 
                     <i class="bi bi-star"></i>
 
@@ -94,24 +114,19 @@
             </nav>
 
             {{-- LISTS --}}
-            <livewire:main.sidebar-lists :key="'sidebar-lists-'.($variant ?? 'default')" />
+            <livewire:main.sidebar-lists :key="'sidebar-lists-' . ($variant ?? 'default')" />
 
         </div>
 
     </div>
 
     {{-- FOOTER --}}
-    <div class="p-3 border-top sidebar-footer mt-auto">
+    <div class="p-2 border-top sidebar-footer mt-auto">
 
-        <button type="button" class="btn app-btn-primary w-100 rounded-4"
-            onclick="window.Livewire.dispatch('open-create-todo')">
-
+        <a href="{{ route('dashboard', ['new' => 1]) }}" wire:navigate class="btn app-btn-primary w-100 rounded-4">
             <i class="bi bi-plus-lg"></i>
-
             New Todo
-
-        </button>
-
+        </a>
     </div>
 
 </div>

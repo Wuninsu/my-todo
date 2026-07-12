@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('tag_id')->constrained()->cascadeOnDelete();
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

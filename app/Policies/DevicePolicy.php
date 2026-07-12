@@ -11,4 +11,14 @@ class DevicePolicy
     {
         return $user->id === $device->user_id;
     }
+
+    public function restore(User $user, Device $device): bool
+    {
+        return $user->id === $device->user_id;
+    }
+
+    public function forceDelete(User $user, Device $device): bool
+    {
+        return $user->id === $device->user_id;
+    }
 }

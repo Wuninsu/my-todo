@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Main;
 
-use App\Models\Device;
+use App\Services\DeviceService;
+use App\Services\ProfileService;
+use App\Traits\TryAction;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -12,7 +14,7 @@ use Livewire\WithFileUploads;
 
 class ProfileIndex extends Component
 {
-    use WithFileUploads;
+    use TryAction, WithFileUploads;
 
     public bool $editing = false;
 
@@ -73,58 +75,44 @@ class ProfileIndex extends Component
         $this->resetErrorBag();
     }
 
-    public function save(): void
+    public function save(ProfileService $profiles): void
     {
         $validated = $this->validate();
 
-        $user = Auth::user();
+        $this->tryAction(function () use ($profiles, $validated) {
+            $profiles->update(Auth::user(), $validated, $this->avatar);
 
-        $data = [
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'timezone' => $validated['timezone'],
-            'theme' => $validated['theme'],
-            'version' => $user->version + 1,
-            'client_updated_at' => now(),
-        ];
+            $this->avatar = null;
+            $this->editing = false;
 
-        if ($this->avatar) {
-            $data['avatar'] = $this->avatar->store('avatars', 'public');
-        }
-
-        $user->update($data);
-
-        $this->avatar = null;
-        $this->editing = false;
-
-        session()->flash('success', 'Profile updated.');
+            $this->dispatch('toast', type: 'success', message: 'Profile updated.');
+        }, 'Could not update your profile.');
     }
 
-    public function changePassword(): void
+    public function changePassword(ProfileService $profiles): void
     {
         $this->validate([
             'current_password' => ['required', 'current_password'],
             'password' => ['required', 'confirmed', Password::defaults()],
         ]);
 
-        Auth::user()->update([
-            'password' => $this->password,
-        ]);
+        $this->tryAction(function () use ($profiles) {
+            $profiles->changePassword(Auth::user(), $this->password);
 
-        $this->reset(['current_password', 'password', 'password_confirmation']);
-        $this->changingPassword = false;
+            $this->reset(['current_password', 'password', 'password_confirmation']);
+            $this->changingPassword = false;
 
-        session()->flash('success', 'Password updated.');
+            $this->dispatch('toast', type: 'success', message: 'Password updated.');
+        }, 'Could not update your password.');
     }
 
-    public function revokeDevice(int $deviceId): void
+    public function revokeDevice(int $deviceId, DeviceService $devices): void
     {
-        $device = Device::findOrFail($deviceId);
-        $this->authorize('delete', $device);
+        $this->tryAction(function () use ($devices, $deviceId) {
+            $devices->revoke($deviceId);
 
-        $device->delete();
-
-        session()->flash('success', 'Device revoked.');
+            $this->dispatch('toast', type: 'success', message: 'Device revoked.');
+        }, 'Could not revoke that device.');
     }
 
     #[Title('My Profile')]

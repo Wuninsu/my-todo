@@ -1,11 +1,12 @@
 // Import Bootstrap JS
 import 'bootstrap';
-import { Modal } from 'bootstrap';
 
 import * as bootstrap from 'bootstrap';
 window.bootstrap = bootstrap;
 
 import { initializeTheme, applyTheme } from './theme';
+import { initializeToasts } from './toast';
+import { initializeConfirm } from './confirm';
 
 initializeTheme();
 
@@ -13,6 +14,8 @@ initializeTheme();
 function initializeApp() {
     initializeTheme();
     initializeBootstrapComponents();
+    initializeToasts();
+    initializeConfirm();
 }
 
 /*KEYBOARD SHORTCUTS*/
@@ -58,7 +61,9 @@ function initializeBootstrapComponents() {
         .querySelectorAll('[data-bs-toggle="tooltip"]')
         .forEach(el => {
 
-            new bootstrap.Tooltip(el);
+            if (!bootstrap.Tooltip.getInstance(el)) {
+                new bootstrap.Tooltip(el);
+            }
         });
 
     /*POPOVERS*/
@@ -67,7 +72,9 @@ function initializeBootstrapComponents() {
         .querySelectorAll('[data-bs-toggle="popover"]')
         .forEach(el => {
 
-            new bootstrap.Popover(el);
+            if (!bootstrap.Popover.getInstance(el)) {
+                new bootstrap.Popover(el);
+            }
         });
 }
 
@@ -82,3 +89,12 @@ document.addEventListener(
     'livewire:navigated',
     initializeApp
 );
+
+/*LIVEWIRE COMPONENT UPDATES*/
+// Livewire v4 has no "livewire:update" DOM event (that was a Livewire v2
+// name); the v4 equivalent for "re-run init after any component re-render,
+// not just a full page navigation" is the `morphed` JS hook, fired once per
+// component after its DOM has been patched.
+window.Livewire?.hook('morphed', () => {
+    initializeApp();
+});

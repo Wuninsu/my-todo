@@ -5,7 +5,7 @@ use App\Models\Tag;
 use App\Models\Todo;
 use App\Models\TodoList;
 use App\Models\User;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Database\Seeders\TagSeeder;
 use Livewire\Livewire;
 
 test('guests are redirected to login', function () {
@@ -35,7 +35,8 @@ test('quick add creates a todo in the default list', function () {
         ->test(Dashboard::class)
         ->set('quickTitle', 'Ship the feature')
         ->call('quickAdd')
-        ->assertSee('Ship the feature');
+        ->assertSee('Ship the feature')
+        ->assertDispatched('toast', type: 'success', message: 'Todo added.');
 
     $todo = Todo::where('user_id', $user->id)->first();
 
@@ -88,6 +89,35 @@ test('saving a todo with tags attaches them', function () {
     expect(Tag::where('user_id', $user->id)->count())->toBe(2);
 });
 
+test('saving a todo reuses an existing system tag instead of duplicating it', function () {
+    (new TagSeeder)->run();
+    $systemTag = Tag::system()->where('name', 'urgent')->firstOrFail();
+
+    $user = User::factory()->create();
+    $list = TodoList::factory()->for($user)->default()->create();
+
+    Livewire::actingAs($user)
+        ->test(Dashboard::class)
+        ->call('openCreateTodo')
+        ->set('title', 'Ship the release')
+        ->set('tagsInput', 'urgent')
+        ->call('saveTodo');
+
+    $todo = Todo::where('title', 'Ship the release')->firstOrFail();
+
+    expect($todo->tags->pluck('id')->all())->toBe([$systemTag->id]);
+    expect(Tag::where('name', 'urgent')->count())->toBe(1);
+});
+
+test('the tag filter dropdown includes system tags', function () {
+    (new TagSeeder)->run();
+    $user = User::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test(Dashboard::class)
+        ->assertViewHas('allTags', fn ($tags) => $tags->pluck('name')->contains('urgent'));
+});
+
 test('delete todo soft deletes it and it disappears from the dashboard', function () {
     $user = User::factory()->create();
     $todo = Todo::factory()->for($user)->create(['title' => 'Temp todo']);
@@ -96,20 +126,50 @@ test('delete todo soft deletes it and it disappears from the dashboard', functio
         ->test(Dashboard::class)
         ->assertSee('Temp todo')
         ->call('deleteTodo', $todo->id)
-        ->assertDontSee('Temp todo');
+        ->assertDontSee('Temp todo')
+        ->assertDispatched('toast', type: 'success', message: 'Todo moved to trash.');
 
     expect($todo->fresh()->trashed())->toBeTrue();
+});
+
+test('deleting, editing, and toggling a todo never render a browser confirm dialog', function () {
+    $user = User::factory()->create();
+    Todo::factory()->for($user)->create();
+
+    $response = $this->actingAs($user)->get('/dashboard');
+
+    $response->assertOk();
+    $response->assertDontSee('wire:confirm', false);
+});
+
+test('search matches description as well as title', function () {
+    $user = User::factory()->create();
+    Todo::factory()->for($user)->create(['title' => 'Groceries', 'description' => 'Buy milk and eggs']);
+    Todo::factory()->for($user)->create(['title' => 'Unrelated', 'description' => 'Nothing to do with it']);
+
+    Livewire::actingAs($user)
+        ->test(Dashboard::class)
+        ->set('search', 'milk')
+        ->assertSee('Groceries')
+        ->assertDontSee('Unrelated');
 });
 
 test('a user cannot edit or delete another users todo', function () {
     $user = User::factory()->create();
     $other = User::factory()->create();
-    $todo = Todo::factory()->for($other)->create();
+    $todo = Todo::factory()->for($other)->create(['status' => 'todo', 'is_favorite' => false]);
 
-    expect(fn () => Livewire::actingAs($user)->test(Dashboard::class)->call('deleteTodo', $todo->id))
-        ->toThrow(ModelNotFoundException::class);
-
+    Livewire::actingAs($user)->test(Dashboard::class)->call('deleteTodo', $todo->id);
     expect($todo->fresh()->trashed())->toBeFalse();
+
+    Livewire::actingAs($user)->test(Dashboard::class)->call('toggleStatus', $todo->id);
+    expect($todo->fresh()->status)->toBe('todo');
+
+    Livewire::actingAs($user)->test(Dashboard::class)->call('toggleFavorite', $todo->id);
+    expect($todo->fresh()->is_favorite)->toBeFalse();
+
+    Livewire::actingAs($user)->test(Dashboard::class)->call('editTodo', $todo->id)
+        ->assertSet('todoId', null);
 });
 
 test('selecting a list filters the dashboard to that list only', function () {
@@ -125,6 +185,20 @@ test('selecting a list filters the dashboard to that list only', function () {
         ->call('onListSelected', $listA->uuid)
         ->assertSee('Todo A')
         ->assertDontSee('Todo B');
+});
+
+test('priority filter counts reflect the current scope, not the selected priority', function () {
+    $user = User::factory()->create();
+    Todo::factory()->for($user)->create(['priority' => 'high']);
+    Todo::factory()->for($user)->create(['priority' => 'high']);
+    Todo::factory()->for($user)->create(['priority' => 'low']);
+
+    Livewire::actingAs($user)
+        ->test(Dashboard::class)
+        ->assertViewHas('priorityCounts', fn ($counts) => $counts['high'] === 2 && $counts['low'] === 1 && $counts['medium'] === 0)
+        ->set('priorityFilter', 'high')
+        // counts stay scoped to "everything but the priority filter", not collapsed to just the selected priority
+        ->assertViewHas('priorityCounts', fn ($counts) => $counts['high'] === 2 && $counts['low'] === 1);
 });
 
 test('priority filter narrows the list', function () {

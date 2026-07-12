@@ -26,26 +26,49 @@
 
         <form wire:submit="quickAdd" class="d-flex gap-2">
             <input type="text" wire:model="quickTitle" class="form-control app-input"
-                placeholder="Quick add a todo and press enter...">
-            <button type="submit" class="btn app-btn-primary text-nowrap">
-                <i class="bi bi-plus-lg"></i> Add
+                placeholder="Quick add a todo and press enter..." wire:loading.attr="disabled" wire:target="quickAdd">
+            <button type="submit" class="btn app-btn-primary text-nowrap" wire:loading.attr="disabled" wire:target="quickAdd">
+                <span wire:loading.remove wire:target="quickAdd"><i class="bi bi-plus-lg"></i> Add</span>
+                <span wire:loading wire:target="quickAdd">
+                    <span class="spinner-border spinner-border-sm"></span>
+                </span>
             </button>
         </form>
 
     </div>
 
     {{-- FILTERS --}}
-    <div class="d-flex flex-wrap gap-2">
+    <div class="app-filter-bar d-flex flex-wrap align-items-center gap-3">
 
-        <select wire:model.live="priorityFilter" class="form-select form-select-sm w-auto">
-            <option value="">All priorities</option>
-            <option value="low">Low priority</option>
-            <option value="medium">Medium priority</option>
-            <option value="high">High priority</option>
-        </select>
+        <span class="app-filter-label">
+            <i class="bi bi-funnel"></i> Priority
+        </span>
+
+        <div class="d-flex flex-wrap gap-2">
+
+            <button type="button" wire:click="$set('priorityFilter', null)"
+                class="app-filter-pill {{ ! $priorityFilter ? 'active' : '' }}">
+                All <span class="app-filter-count">{{ $priorityCounts->sum() }}</span>
+            </button>
+
+            @foreach ([
+                'low' => ['Low', '#22c55e'],
+                'medium' => ['Medium', '#f59e0b'],
+                'high' => ['High', '#ef4444'],
+            ] as $value => [$label, $color])
+                <button type="button" wire:click="$set('priorityFilter', '{{ $value }}')"
+                    class="app-filter-pill {{ $priorityFilter === $value ? 'active' : '' }}">
+                    <span class="app-dot" style="background-color: {{ $color }}"></span>
+                    {{ $label }} <span class="app-filter-count">{{ $priorityCounts[$value] }}</span>
+                </button>
+            @endforeach
+
+        </div>
 
         @if ($allTags->isNotEmpty())
-            <select wire:model.live="tagFilter" class="form-select form-select-sm w-auto">
+            <span class="app-filter-divider d-none d-sm-block"></span>
+
+            <select wire:model.live="tagFilter" class="form-select form-select-sm app-filter-select w-auto">
                 <option value="">All tags</option>
                 @foreach ($allTags as $tag)
                     <option value="{{ $tag->id }}">#{{ $tag->name }}</option>
@@ -54,9 +77,8 @@
         @endif
 
         @if ($priorityFilter || $tagFilter)
-            <button type="button" class="btn btn-sm btn-outline-secondary"
-                wire:click="$set('priorityFilter', null); $set('tagFilter', null)">
-                Clear filters
+            <button type="button" class="app-filter-clear ms-auto" wire:click="$set('priorityFilter', null); $set('tagFilter', null)">
+                <i class="bi bi-x-circle"></i> Clear filters
             </button>
         @endif
 
@@ -78,77 +100,83 @@
 
     {{-- CREATE / EDIT TODO MODAL --}}
     @if ($showTodoModal)
-        <div class="modal d-block" tabindex="-1" style="background: rgba(0,0,0,.5)" wire:click.self="$set('showTodoModal', false)">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
+        <div class="app-modal-backdrop" wire:click.self="$set('showTodoModal', false)">
+            <div class="app-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="todoModalTitle">
 
-                    <form wire:submit="saveTodo">
+                <form wire:submit="saveTodo" class="d-flex flex-column min-height-0">
 
-                        <div class="modal-header">
-                            <h5 class="modal-title">{{ $todoId ? 'Edit Todo' : 'New Todo' }}</h5>
-                            <button type="button" class="btn-close" wire:click="$set('showTodoModal', false)"></button>
+                    <div class="app-modal-header">
+                        <h5 class="app-modal-title" id="todoModalTitle">{{ $todoId ? 'Edit Todo' : 'New Todo' }}</h5>
+                        <button type="button" class="btn-close" wire:click="$set('showTodoModal', false)"></button>
+                    </div>
+
+                    <div class="app-modal-body d-flex flex-column gap-3">
+
+                        <div>
+                            <label class="form-label">Title</label>
+                            <input type="text" wire:model="title"
+                                class="form-control app-input @error('title') is-invalid @enderror" autofocus>
+                            @error('title')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
 
-                        <div class="modal-body d-flex flex-column gap-3">
+                        <div>
+                            <label class="form-label">Description</label>
+                            <textarea wire:model="description" class="form-control app-input" rows="3"></textarea>
+                        </div>
 
-                            <div>
-                                <label class="form-label">Title</label>
-                                <input type="text" wire:model="title" class="form-control" autofocus>
-                                @error('title') <div class="small text-danger">{{ $message }}</div> @enderror
-                            </div>
-
-                            <div>
-                                <label class="form-label">Description</label>
-                                <textarea wire:model="description" class="form-control" rows="3"></textarea>
-                            </div>
-
-                            <div class="row g-3">
-                                <div class="col-6">
-                                    <label class="form-label">Priority</label>
-                                    <select wire:model="priority" class="form-select">
-                                        <option value="low">Low</option>
-                                        <option value="medium">Medium</option>
-                                        <option value="high">High</option>
-                                    </select>
-                                </div>
-                                <div class="col-6">
-                                    <label class="form-label">Due date</label>
-                                    <input type="date" wire:model="due_date" class="form-control">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="form-label">Reminder</label>
-                                <input type="datetime-local" wire:model="reminder_at" class="form-control">
-                            </div>
-
-                            <div>
-                                <label class="form-label">List</label>
-                                <select wire:model="todo_list_id" class="form-select">
-                                    <option value="">No list</option>
-                                    @foreach ($lists as $list)
-                                        <option value="{{ $list->id }}">{{ $list->name }}</option>
-                                    @endforeach
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="form-label">Priority</label>
+                                <select wire:model="priority" class="form-select app-input">
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
                                 </select>
                             </div>
-
-                            <div>
-                                <label class="form-label">Tags</label>
-                                <input type="text" wire:model="tagsInput" class="form-control"
-                                    placeholder="comma, separated, tags">
+                            <div class="col-6">
+                                <label class="form-label">Due date</label>
+                                <input type="date" wire:model="due_date" class="form-control app-input">
                             </div>
-
                         </div>
 
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary"
-                                wire:click="$set('showTodoModal', false)">Cancel</button>
-                            <button type="submit" class="btn app-btn-primary">Save</button>
+                        <div>
+                            <label class="form-label">Reminder</label>
+                            <input type="datetime-local" wire:model="reminder_at" class="form-control app-input">
                         </div>
 
-                    </form>
+                        <div>
+                            <label class="form-label">List</label>
+                            <select wire:model="todo_list_id" class="form-select app-input">
+                                <option value="">No list</option>
+                                @foreach ($lists as $list)
+                                    <option value="{{ $list->id }}">{{ $list->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                </div>
+                        <div>
+                            <label class="form-label">Tags</label>
+                            <input type="text" wire:model="tagsInput" class="form-control app-input"
+                                placeholder="comma, separated, tags">
+                        </div>
+
+                    </div>
+
+                    <div class="app-modal-footer">
+                        <button type="button" class="btn btn-outline-secondary rounded-4"
+                            wire:click="$set('showTodoModal', false)">Cancel</button>
+                        <button type="submit" class="btn app-btn-primary rounded-4" wire:loading.attr="disabled" wire:target="saveTodo">
+                            <span wire:loading.remove wire:target="saveTodo">Save</span>
+                            <span wire:loading wire:target="saveTodo">
+                                <span class="spinner-border spinner-border-sm"></span>
+                            </span>
+                        </button>
+                    </div>
+
+                </form>
+
             </div>
         </div>
     @endif

@@ -2,19 +2,24 @@
 
 namespace App\Livewire\Main;
 
-use App\Models\Todo;
-use App\Models\TodoList;
+use App\Models\Tag;
+use App\Services\TagService;
+use App\Services\TodoService;
+use App\Traits\TryAction;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 
 class Dashboard extends Component
 {
+    use TryAction;
+
     public ?string $activeListUuid = null;
 
+    #[Url]
     public ?string $filter = null;
 
     public ?string $priorityFilter = null;
@@ -56,18 +61,26 @@ class Dashboard extends Component
         ];
     }
 
+    public function mount(TodoService $todos): void
+    {
+        if (request()->boolean('new')) {
+            $this->openCreateTodo($todos);
+        }
+
+        if ($todoId = request()->integer('todo')) {
+            $todo = Auth::user()->todos()->find($todoId);
+
+            if ($todo) {
+                $this->editTodo($todo->id, $todos);
+            }
+        }
+    }
+
     #[On('list-selected')]
     public function onListSelected(?string $uuid = null): void
     {
         $this->activeListUuid = $uuid;
         $this->filter = null;
-    }
-
-    #[On('filter-selected')]
-    public function onFilterSelected(?string $filter = null): void
-    {
-        $this->filter = $filter;
-        $this->activeListUuid = null;
     }
 
     #[On('search-changed')]
@@ -76,7 +89,7 @@ class Dashboard extends Component
         $this->search = $term;
     }
 
-    public function quickAdd(): void
+    public function quickAdd(TodoService $todos): void
     {
         $title = trim($this->quickTitle);
 
@@ -84,239 +97,112 @@ class Dashboard extends Component
             return;
         }
 
-        $listId = $this->resolveTargetListId();
+        $this->tryAction(function () use ($todos, $title) {
+            $listId = $todos->resolveTargetListId(Auth::user(), $this->activeListUuid);
 
-        Todo::create([
-            'uuid' => Str::uuid(),
-            'user_id' => Auth::id(),
-            'todo_list_id' => $listId,
-            'title' => $title,
-            'status' => 'todo',
-            'priority' => 'medium',
-            'position' => $this->nextPosition($listId),
-            'version' => 1,
-            'client_updated_at' => now(),
-        ]);
+            $todos->quickAdd(Auth::user(), $title, $listId);
 
-        $this->quickTitle = '';
+            $this->quickTitle = '';
+
+            $this->dispatch('toast', type: 'success', message: 'Todo added.');
+        }, 'Could not add the todo.');
     }
 
-    #[On('open-create-todo')]
-    public function openCreateTodo(): void
+    public function openCreateTodo(TodoService $todos): void
     {
         $this->reset(['todoId', 'title', 'description', 'due_date', 'reminder_at', 'tagsInput']);
         $this->priority = 'medium';
-        $this->todo_list_id = $this->resolveTargetListId();
+        $this->todo_list_id = $todos->resolveTargetListId(Auth::user(), $this->activeListUuid);
         $this->resetErrorBag();
         $this->showTodoModal = true;
     }
 
-    public function editTodo(int $id): void
+    public function editTodo(int $id, TodoService $todos): void
     {
-        $todo = Todo::with('tags')->findOrFail($id);
-        $this->authorize('update', $todo);
+        $this->tryAction(function () use ($todos, $id) {
+            $todo = $todos->findForEdit($id);
 
-        $this->todoId = $todo->id;
-        $this->title = $todo->title;
-        $this->description = (string) $todo->description;
-        $this->priority = $todo->priority;
-        $this->due_date = $todo->due_date?->format('Y-m-d');
-        $this->reminder_at = $todo->reminder_at?->format('Y-m-d\TH:i');
-        $this->todo_list_id = $todo->todo_list_id;
-        $this->tagsInput = $todo->tags->pluck('name')->implode(', ');
-        $this->resetErrorBag();
-        $this->showTodoModal = true;
+            $this->todoId = $todo->id;
+            $this->title = $todo->title;
+            $this->description = (string) $todo->description;
+            $this->priority = $todo->priority;
+            $this->due_date = $todo->due_date?->format('Y-m-d');
+            $this->reminder_at = $todo->reminder_at?->format('Y-m-d\TH:i');
+            $this->todo_list_id = $todo->todo_list_id;
+            $this->tagsInput = $todo->tags->pluck('name')->implode(', ');
+            $this->resetErrorBag();
+            $this->showTodoModal = true;
+        }, 'Could not open that todo.');
     }
 
-    public function saveTodo(): void
+    public function saveTodo(TodoService $todos, TagService $tags): void
     {
         $this->todo_list_id = $this->todo_list_id ?: null;
 
         $validated = $this->validate();
 
-        if ($this->todoId) {
-            $todo = Todo::findOrFail($this->todoId);
-            $this->authorize('update', $todo);
+        $this->tryAction(function () use ($todos, $tags, $validated) {
+            $tagIds = $tags->resolveTagIds(Auth::user(), $this->tagsInput);
 
-            $todo->update([
-                'title' => $validated['title'],
-                'description' => $validated['description'],
-                'priority' => $validated['priority'],
-                'due_date' => $validated['due_date'],
-                'reminder_at' => $validated['reminder_at'],
-                'todo_list_id' => $validated['todo_list_id'],
-                'version' => $todo->version + 1,
-                'client_updated_at' => now(),
-            ]);
-        } else {
-            $todo = Todo::create([
-                'uuid' => Str::uuid(),
-                'user_id' => Auth::id(),
-                'todo_list_id' => $validated['todo_list_id'],
-                'title' => $validated['title'],
-                'description' => $validated['description'],
-                'priority' => $validated['priority'],
-                'due_date' => $validated['due_date'],
-                'reminder_at' => $validated['reminder_at'],
-                'status' => 'todo',
-                'position' => $this->nextPosition($validated['todo_list_id']),
-                'version' => 1,
-                'client_updated_at' => now(),
-            ]);
-        }
-
-        $this->syncTags($todo);
-
-        $this->showTodoModal = false;
-    }
-
-    protected function syncTags(Todo $todo): void
-    {
-        $names = collect(explode(',', $this->tagsInput))
-            ->map(fn ($name) => trim($name))
-            ->filter()
-            ->unique();
-
-        $tagIds = $names->map(function (string $name) {
-            return Auth::user()->tags()->firstOrCreate(
-                ['name' => $name],
-                ['uuid' => Str::uuid(), 'version' => 1, 'client_updated_at' => now()]
-            )->id;
-        });
-
-        $todo->tags()->sync($tagIds);
-    }
-
-    public function deleteTodo(int $id): void
-    {
-        $todo = Todo::findOrFail($id);
-        $this->authorize('delete', $todo);
-
-        $todo->delete();
-    }
-
-    public function toggleStatus(int $id): void
-    {
-        $todo = Todo::findOrFail($id);
-        $this->authorize('update', $todo);
-
-        $next = match ($todo->status) {
-            'todo' => 'doing',
-            'doing' => 'done',
-            default => 'todo',
-        };
-
-        $todo->update([
-            'status' => $next,
-            'started_at' => $next === 'doing' ? now() : $todo->started_at,
-            'completed_at' => $next === 'done' ? now() : null,
-            'version' => $todo->version + 1,
-            'client_updated_at' => now(),
-        ]);
-    }
-
-    public function toggleFavorite(int $id): void
-    {
-        $todo = Todo::findOrFail($id);
-        $this->authorize('update', $todo);
-
-        $todo->update([
-            'is_favorite' => ! $todo->is_favorite,
-            'version' => $todo->version + 1,
-            'client_updated_at' => now(),
-        ]);
-    }
-
-    protected function nextPosition(?int $listId): int
-    {
-        return Auth::user()->todos()->where('todo_list_id', $listId)->max('position') + 1;
-    }
-
-    public function moveUp(int $id): void
-    {
-        $this->reorder($id, -1);
-    }
-
-    public function moveDown(int $id): void
-    {
-        $this->reorder($id, 1);
-    }
-
-    protected function reorder(int $id, int $direction): void
-    {
-        $todo = Todo::findOrFail($id);
-        $this->authorize('update', $todo);
-
-        $siblings = Auth::user()->todos()
-            ->where('todo_list_id', $todo->todo_list_id)
-            ->orderBy('position')
-            ->orderBy('created_at')
-            ->get()
-            ->values();
-
-        $index = $siblings->search(fn ($sibling) => $sibling->id === $todo->id);
-        $targetIndex = $index + $direction;
-
-        if ($index === false || $targetIndex < 0 || $targetIndex >= $siblings->count()) {
-            return;
-        }
-
-        $moved = $siblings->pull($index);
-        $siblings->splice($targetIndex, 0, [$moved]);
-
-        foreach ($siblings->values() as $position => $sibling) {
-            if ($sibling->position !== $position) {
-                $sibling->update(['position' => $position]);
+            if ($this->todoId) {
+                $todos->update($this->todoId, $validated, $tagIds);
+            } else {
+                $todos->create(Auth::user(), $validated, $tagIds);
             }
-        }
+
+            $wasEditing = (bool) $this->todoId;
+
+            $this->showTodoModal = false;
+
+            $this->dispatch('toast', type: 'success', message: $wasEditing ? 'Todo updated.' : 'Todo added.');
+        }, 'Could not save the todo.');
     }
 
-    protected function resolveTargetListId(): ?int
+    public function deleteTodo(int $id, TodoService $todos): void
     {
-        if ($this->activeListUuid) {
-            return TodoList::where('user_id', Auth::id())
-                ->where('uuid', $this->activeListUuid)
-                ->value('id');
-        }
+        $this->tryAction(function () use ($todos, $id) {
+            $todos->delete($id);
 
-        return Auth::user()->todoLists()->where('is_default', true)->value('id');
+            $this->dispatch('toast', type: 'success', message: 'Todo moved to trash.');
+        }, 'Could not delete the todo.');
+    }
+
+    public function toggleStatus(int $id, TodoService $todos): void
+    {
+        $this->tryAction(fn () => $todos->toggleStatus($id), 'Could not update the todo.');
+    }
+
+    public function toggleFavorite(int $id, TodoService $todos): void
+    {
+        $this->tryAction(fn () => $todos->toggleFavorite($id), 'Could not update the todo.');
+    }
+
+    public function moveUp(int $id, TodoService $todos): void
+    {
+        $this->tryAction(fn () => $todos->reorder(Auth::user(), $id, -1), 'Could not reorder the todo.');
+    }
+
+    public function moveDown(int $id, TodoService $todos): void
+    {
+        $this->tryAction(fn () => $todos->reorder(Auth::user(), $id, 1), 'Could not reorder the todo.');
     }
 
     #[Title('Dashboard')]
-    public function render()
+    public function render(TodoService $todos)
     {
-        $query = Auth::user()->todos()->with(['list', 'tags'])->where('status', '!=', 'archived');
+        $todoList = $todos->scopedTodos(Auth::user(), $this->activeListUuid, $this->filter, $this->priorityFilter, $this->tagFilter, $this->search)
+            ->with(['list', 'tags'])
+            ->orderBy('position')
+            ->orderByDesc('created_at')
+            ->get();
 
-        if ($this->activeListUuid) {
-            $query->whereHas('list', fn ($q) => $q->where('uuid', $this->activeListUuid));
-        }
-
-        match ($this->filter) {
-            'today' => $query->whereDate('due_date', today()),
-            'upcoming' => $query->whereDate('due_date', '>', today()),
-            'completed' => $query->where('status', 'done'),
-            'favorites' => $query->where('is_favorite', true),
-            default => null,
-        };
-
-        if ($this->priorityFilter) {
-            $query->where('priority', $this->priorityFilter);
-        }
-
-        if ($this->tagFilter) {
-            $query->whereHas('tags', fn ($q) => $q->where('tags.id', $this->tagFilter));
-        }
-
-        if ($this->search !== '') {
-            $query->where('title', 'like', '%'.$this->search.'%');
-        }
-
-        $todos = $query->orderBy('position')->orderByDesc('created_at')->get();
+        $priorityCounts = $todos->priorityCounts(Auth::user(), $this->activeListUuid, $this->filter, $this->tagFilter, $this->search);
 
         return view('livewire.main.dashboard', [
-            'todos' => $todos,
+            'todos' => $todoList,
             'lists' => Auth::user()->todoLists()->orderByDesc('is_default')->orderBy('name')->get(),
-            'allTags' => Auth::user()->tags()->orderBy('name')->get(),
+            'allTags' => Tag::availableTo(Auth::user())->orderBy('name')->get(),
+            'priorityCounts' => $priorityCounts,
         ]);
     }
 }

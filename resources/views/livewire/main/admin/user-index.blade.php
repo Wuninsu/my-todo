@@ -1,32 +1,7 @@
-<div>
-
-    <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
-
-        <div>
-
-            <h4 class="fw-bold mb-1">
-                Users
-            </h4>
-
-            <p class="text-muted mb-0">
-                Manage application users.
-            </p>
-
-        </div>
-
-    </div>
-
-    {{-- ALERTS --}}
-    @if (session('success'))
-        <div class="alert alert-success rounded-4 border-0 mb-4">{{ session('success') }}</div>
-    @endif
-
-    @if (session('error'))
-        <div class="alert alert-danger rounded-4 border-0 mb-4">{{ session('error') }}</div>
-    @endif
+<div class="app-page-fill">
 
     {{-- FILTERS --}}
-    <div class="app-card p-3 mb-4">
+    <div class="app-card p-3 mb-4 flex-shrink-0">
 
         <div class="row g-3">
 
@@ -48,11 +23,9 @@
             <div class="col-lg-3">
 
                 <select wire:model.live="role" class="form-select app-input">
-
                     <option value="">
                         All Roles
                     </option>
-
                     <option value="admin">
                         Admin
                     </option>
@@ -80,10 +53,9 @@
     </div>
 
     {{-- USERS TABLE --}}
-    <div class="app-card overflow-hidden">
+   <div class="app-card">
 
         <div class="table-responsive">
-
             <table class="table align-middle mb-0 app-table">
 
                 <thead>
@@ -249,8 +221,7 @@
 
                                         <li>
                                             <button type="button" class="dropdown-item text-danger"
-                                                wire:click="delete({{ $user->id }})"
-                                                wire:confirm="Deactivate this user? Their data is kept and this can be undone.">
+                                                wire:click="delete({{ $user->id }})">
                                                 <i class="bi bi-trash"></i>
                                                 Delete
                                             </button>
@@ -303,11 +274,18 @@
 
     </div>
 
-    {{-- PAGINATION --}}
-    <div class="mt-4">
-
-        {{ $users->links() }}
-
-    </div>
+    {{-- LOAD MORE --}}
+    @if ($hasMore)
+        <div class="d-flex justify-content-center mt-4 flex-shrink-0">
+            <button type="button" class="btn btn-outline-secondary rounded-4" wire:click="loadMore"
+                wire:loading.attr="disabled" wire:target="loadMore">
+                <span wire:loading.remove wire:target="loadMore">Load More</span>
+                <span wire:loading wire:target="loadMore">
+                    <span class="spinner-border spinner-border-sm"></span>
+                    Loading...
+                </span>
+            </button>
+        </div>
+    @endif
 
 </div>

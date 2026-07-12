@@ -25,4 +25,11 @@ class TagFactory extends Factory
             'client_updated_at' => now(),
         ];
     }
+
+    public function system(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'user_id' => null,
+        ]);
+    }
 }

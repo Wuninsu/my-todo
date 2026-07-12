@@ -7,6 +7,24 @@
 
 /*GLOBALS*/
 
+.min-width-0 {
+    min-width: 0;
+}
+
+.min-height-0 {
+    min-height: 0;
+}
+
+/* Opt-in for a page whose root element should fill the remaining viewport
+   height below the header, so a list/table inside it can flex to fill the
+   screen and scroll internally instead of the whole page scrolling. */
+.app-page-fill {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
 html,
 body {
     background: var(--app-bg);
@@ -62,12 +80,6 @@ body {
 
 .app-sidebar-item.active {
     background:var(--app-sidebar-item-active);
-}
-
-.modal-content {
-    background:var(--app-modal-bg);
-    border:1px solid var(--app-border);
-    border-radius:var(--app-radius);
 }
 
 .dropdown-menu {
@@ -157,6 +169,9 @@ body {
 .app-main {
     flex: 1;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
 
 .app-sidebar {
@@ -172,16 +187,21 @@ body {
 .app-mobile-sidebar {
     width:var(--app-sidebar-width);
     background:var(--app-sidebar-bg);
+    color:var(--app-text);
 }
 
 .app-content {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
     padding:1.5rem;
     padding-bottom:6rem;
+    overflow-y: auto;
 }
 
 .app-header {
-    position: sticky;
-    top: 0;
+    flex-shrink: 0;
     z-index: 1000;
     padding:1rem 1.5rem;
     border-bottom:1px solid var(--app-border);
@@ -202,6 +222,11 @@ body {
 .text-muted{
      color:var(--app-text-muted) !important;
 }
+
+.bg-body-tertiary {
+    background-color:var(--app-surface) !important;
+}
+
 .app-search-icon {
     position: absolute;
     top: 50%;
@@ -211,7 +236,7 @@ body {
 }
 
 .app-input {
-    background:var(--app-input-bg);
+    background-color:var(--app-input-bg);
     border:1px solid var(--app-input-border);
     border-radius:var(--app-radius);
     color:var(--app-text);
@@ -227,12 +252,76 @@ body {
     color:var(--app-placeholder);
     opacity: 1;
 }
+
+/* Plain Bootstrap form controls (most inputs/selects in the app don't carry
+   the .app-input class) still need to follow the active theme instead of
+   Bootstrap's hardcoded light defaults. */
+.form-control,
+.form-select,
+.form-control-color {
+    background-color:var(--app-input-bg);
+    border-color:var(--app-input-border);
+    color:var(--app-text);
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color:var(--app-input-bg);
+    border-color:rgba(var(--app-primary-rgb), 0.4);
+    box-shadow:0 0 0 0.2rem rgba(var(--app-primary-rgb), 0.15);
+    color:var(--app-text);
+}
+
+.form-control::placeholder {
+    color:var(--app-text-muted);
+    opacity: 1;
+}
+
+.form-select option {
+    background-color:var(--app-input-bg);
+    color:var(--app-text);
+}
+
+.form-check-input {
+    background-color:var(--app-input-bg);
+    border-color:var(--app-input-border);
+}
+
+.form-check-input:checked {
+    background-color:var(--app-primary);
+    border-color:var(--app-primary);
+}
+
+.form-label,
+.form-check-label {
+    color:var(--app-text);
+}
+
+.invalid-feedback {
+    color:#ef4444;
+}
+
+[data-theme="dark"] .form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+}
+
+@media (prefers-color-scheme: dark) {
+    [data-theme="system"] .form-select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    }
+}
+
 .app-btn-primary {
     background:var(--app-primary);
     border: none;
     color: white;
     min-height: 48px;
     font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    text-align: center;
 }
 
 .app-btn-primary:hover {
@@ -250,6 +339,87 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/*ALERTS*/
+
+.app-alert-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background:#ef4444;
+    color:#fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.app-alert-dropdown {
+    width: 360px;
+    max-width: calc(100vw - 2rem);
+    padding: 0;
+    overflow: hidden;
+}
+
+.app-alert-list {
+    max-height: 360px;
+    overflow-y: auto;
+}
+
+.app-alert-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--app-border);
+    text-align: left;
+    color:var(--app-text);
+    transition:background var(--app-transition);
+}
+
+.app-alert-item:last-child {
+    border-bottom: none;
+}
+
+.app-alert-item:hover {
+    background:var(--app-dropdown-hover);
+}
+
+.app-alert-item.unread {
+    background:rgba(var(--app-primary-rgb), 0.06);
+}
+
+.app-alert-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.9rem;
+    background:rgba(var(--app-primary-rgb), 0.12);
+    color:var(--app-primary);
+}
+
+.app-alert-icon.overdue {
+    background:rgba(239, 68, 68, 0.12);
+    color:#ef4444;
+}
+
+.app-alert-icon.due_today {
+    background:rgba(245, 158, 11, 0.12);
+    color:#f59e0b;
 }
 
 .app-mobile-nav {
@@ -314,6 +484,89 @@ body {
     border-radius: 50%;
 }
 
+.app-filter-bar {
+    background:var(--app-card);
+    border:1px solid var(--app-border);
+    border-radius:var(--app-radius);
+    padding:0.6rem 0.75rem;
+}
+
+.app-filter-label {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color:var(--app-text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.app-filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid var(--app-border);
+    background: transparent;
+    color:var(--app-text-muted);
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition:all var(--app-transition);
+}
+
+.app-filter-pill:hover {
+    border-color:rgba(var(--app-primary-rgb), 0.35);
+    color:var(--app-text);
+}
+
+.app-filter-pill.active {
+    background:rgba(var(--app-primary-rgb), 0.12);
+    border-color: transparent;
+    color:var(--app-primary);
+}
+
+.app-filter-count {
+    background: color-mix(in srgb, currentColor 14%, transparent);
+    border-radius: 999px;
+    padding: 0.05rem 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.app-filter-select {
+    border-radius: 999px !important;
+    font-size: 0.82rem;
+    font-weight: 600;
+    min-height: unset !important;
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+}
+
+.app-filter-divider {
+    width: 1px;
+    align-self: stretch;
+    background:var(--app-border);
+}
+
+.app-filter-clear {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color:var(--app-text-muted);
+    font-size: 0.82rem;
+    font-weight: 600;
+    border: none;
+    background: transparent;
+    padding: 0.35rem 0.5rem;
+}
+
+.app-filter-clear:hover {
+    color:#ef4444;
+}
+
 .app-sidebar {
     width:var(--app-sidebar-width);
     background:var(--app-sidebar-bg);
@@ -333,10 +586,15 @@ body {
 
 .app-table {
     --bs-table-bg:transparent;
+    --bs-table-color:var(--app-text);
+    --bs-table-border-color:var(--app-border);
     margin-bottom: 0;
 }
 
 .app-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
     background:var(--app-surface);
     color:var(--app-text-muted);
     font-size: 0.8rem;
@@ -411,6 +669,16 @@ body {
     color:#0ea5e9;
 }
 
+.app-stat-desc {
+    font-size: 0.9rem;
+}
+
+@media (max-width: 767.98px) {
+    .app-stat-desc {
+        font-size: 0.75rem;
+    }
+}
+
 .welcome-title {
     font-weight: 800;
     line-height: 1.1;
@@ -454,4 +722,232 @@ body {
     align-items: center;
     justify-content: center;
     padding:3rem 2rem;
+}
+
+/*TOASTS*/
+
+.app-toast-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    max-width: 360px;
+    width: calc(100% - 2rem);
+}
+
+.app-toast {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.85rem 1rem;
+    border-radius:var(--app-radius);
+    background:var(--app-card);
+    border:1px solid var(--app-border);
+    box-shadow:var(--app-shadow);
+    color:var(--app-text);
+    font-weight: 500;
+    font-size: 0.9rem;
+    opacity: 0;
+    transform: translateX(16px);
+    transition:opacity var(--app-transition), transform var(--app-transition);
+}
+
+.app-toast-visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.app-toast > i:first-child {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.app-toast-success > i:first-child {
+    color:#22c55e;
+}
+
+.app-toast-error > i:first-child {
+    color:#ef4444;
+}
+
+.app-toast-info > i:first-child {
+    color:#0ea5e9;
+}
+
+.app-toast-message {
+    flex-grow: 1;
+}
+
+.app-toast-close {
+    border: none;
+    background: transparent;
+    color:var(--app-text-muted);
+    line-height: 1;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+/*CONFIRM DIALOG*/
+/* Deliberately not a Bootstrap modal: a lightweight custom overlay with a
+   smooth fade + scale transition, styled to match the rest of the app
+   instead of Bootstrap's boxy modal chrome. */
+
+.app-confirm-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background:var(--app-backdrop);
+    opacity: 0;
+    visibility: hidden;
+    transition:opacity var(--app-transition), visibility var(--app-transition);
+}
+
+.app-confirm-backdrop.app-confirm-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.app-confirm-dialog {
+    width: 100%;
+    max-width: 380px;
+    background:var(--app-card);
+    border:1px solid var(--app-border);
+    border-radius:var(--app-radius-lg);
+    box-shadow:var(--app-shadow);
+    padding: 1.75rem;
+    text-align: center;
+    transform: scale(0.94) translateY(8px);
+    transition:transform var(--app-transition);
+}
+
+.app-confirm-backdrop.app-confirm-visible .app-confirm-dialog {
+    transform: scale(1) translateY(0);
+}
+
+.app-confirm-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    background:rgba(239, 68, 68, 0.12);
+    color:#ef4444;
+}
+
+.app-confirm-icon.app-confirm-icon-neutral {
+    background:rgba(var(--app-primary-rgb), 0.12);
+    color:var(--app-primary);
+}
+
+.app-confirm-title {
+    font-weight: 700;
+    color:var(--app-heading);
+    margin-bottom: 0.4rem;
+}
+
+.app-confirm-message {
+    color:var(--app-text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.app-confirm-actions {
+    display: flex;
+    gap: 0.6rem;
+    justify-content: center;
+}
+
+.app-confirm-actions .btn {
+    flex: 1;
+}
+
+/*APP MODAL*/
+/* Shared dialog chrome for every modal in the app (currently the todo
+   create/edit modal) — same card look, radius, shadow, and fade+scale
+   entrance as the confirm dialog, but with a header/body/footer layout
+   and a body that scrolls internally once content is taller than the
+   viewport, so the dialog itself never overflows the screen. */
+
+.app-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background:var(--app-backdrop);
+    animation: app-modal-fade-in var(--app-transition) ease;
+}
+
+.app-modal-dialog {
+    width: 100%;
+    max-width: 480px;
+    max-height: calc(100vh - 2rem);
+    display: flex;
+    flex-direction: column;
+    background:var(--app-card);
+    border:1px solid var(--app-border);
+    border-radius:var(--app-radius-lg);
+    box-shadow:var(--app-shadow);
+    overflow: hidden;
+    animation: app-modal-pop-in var(--app-transition) ease;
+}
+
+.app-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--app-border);
+    flex-shrink: 0;
+}
+
+.app-modal-title {
+    font-weight: 700;
+    color:var(--app-heading);
+    margin: 0;
+}
+
+.app-modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.app-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--app-border);
+    flex-shrink: 0;
+}
+
+@keyframes app-modal-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes app-modal-pop-in {
+    from { transform:scale(0.94) translateY(8px); opacity: 0; }
+    to { transform:scale(1) translateY(0); opacity: 1; }
+}
+
+
+.border-top{
+    border-color: var(--app-border) !important;
 }

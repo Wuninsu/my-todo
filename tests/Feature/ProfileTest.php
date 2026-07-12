@@ -3,7 +3,6 @@
 use App\Livewire\Main\ProfileIndex;
 use App\Models\Device;
 use App\Models\User;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -29,7 +28,8 @@ test('a user can update their profile details', function () {
         ->set('email', $user->email)
         ->set('timezone', 'America/New_York')
         ->set('theme', 'dark')
-        ->call('save');
+        ->call('save')
+        ->assertDispatched('toast', type: 'success', message: 'Profile updated.');
 
     $user->refresh();
 
@@ -86,7 +86,8 @@ test('a user can change their password with the correct current password', funct
         ->set('password', 'brand-new-password')
         ->set('password_confirmation', 'brand-new-password')
         ->call('changePassword')
-        ->assertHasNoErrors();
+        ->assertHasNoErrors()
+        ->assertDispatched('toast', type: 'success', message: 'Password updated.');
 
     expect(Hash::check('brand-new-password', $user->fresh()->password))->toBeTrue();
 });
@@ -109,7 +110,10 @@ test('a user can revoke their own device', function () {
     $user = User::factory()->create();
     $device = Device::factory()->for($user)->create();
 
-    Livewire::actingAs($user)->test(ProfileIndex::class)->call('revokeDevice', $device->id);
+    Livewire::actingAs($user)
+        ->test(ProfileIndex::class)
+        ->call('revokeDevice', $device->id)
+        ->assertDispatched('toast', type: 'success', message: 'Device revoked.');
 
     expect(Device::find($device->id))->toBeNull();
 });
@@ -119,8 +123,17 @@ test('a user cannot revoke another users device', function () {
     $other = User::factory()->create();
     $device = Device::factory()->for($other)->create();
 
-    expect(fn () => Livewire::actingAs($user)->test(ProfileIndex::class)->call('revokeDevice', $device->id))
-        ->toThrow(ModelNotFoundException::class);
+    Livewire::actingAs($user)->test(ProfileIndex::class)->call('revokeDevice', $device->id);
 
     expect(Device::find($device->id))->not->toBeNull();
+});
+
+test('the profile page renders no browser-native confirm dialog', function () {
+    $user = User::factory()->create();
+    Device::factory()->for($user)->create();
+
+    $response = $this->actingAs($user)->get('/profile');
+
+    $response->assertOk();
+    $response->assertDontSee('wire:confirm', false);
 });

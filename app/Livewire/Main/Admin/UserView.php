@@ -8,6 +8,7 @@ use Livewire\Component;
 class UserView extends Component
 {
     public User $user;
+
     public function mount(User $user)
     {
         $this->authorize('view', $user);

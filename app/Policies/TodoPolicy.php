@@ -16,4 +16,14 @@ class TodoPolicy
     {
         return $user->id === $todo->user_id;
     }
+
+    public function restore(User $user, Todo $todo): bool
+    {
+        return $user->id === $todo->user_id;
+    }
+
+    public function forceDelete(User $user, Todo $todo): bool
+    {
+        return $user->id === $todo->user_id;
+    }
 }

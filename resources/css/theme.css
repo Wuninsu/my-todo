@@ -178,6 +178,9 @@
 
     --app-placeholder:
     #94a3b8;
+
+    /*BOOTSTRAP BRIDGES (components not migrated to the app's CSS vars)*/
+    --bs-btn-close-filter: invert(1) grayscale(100%) brightness(200%);
 }
 
 /*SYSTEM THEME*/
@@ -202,6 +205,7 @@
         --app-dropdown-item-color:#e2e8f0;
         --app-dropdown-item-hover-color:#ffffff;
         --app-dropdown-item-active-color:#a5b4fc;
+        --bs-btn-close-filter: invert(1) grayscale(100%) brightness(200%);
     }
 }
 

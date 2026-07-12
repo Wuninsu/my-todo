@@ -3,94 +3,79 @@
 namespace App\Livewire\Main\Admin;
 
 use App\Models\User;
-use Illuminate\Auth\Access\AuthorizationException;
+use App\Services\UserService;
+use App\Traits\TryAction;
 use Livewire\Attributes\Title;
 use Livewire\Component;
-use Livewire\WithPagination;
 
 class UserIndex extends Component
 {
-    use WithPagination;
+    use TryAction;
+
+    protected const PER_PAGE = 10;
 
     public string $search = '';
+
     public string $role = '';
+
     public bool $showTrashed = false;
+
+    public int $perPage = self::PER_PAGE;
 
     public function mount(): void
     {
         $this->authorize('viewAny', User::class);
     }
 
-    public function updatedSearch()
+    public function loadMore(): void
     {
-        $this->resetPage();
+        $this->perPage += self::PER_PAGE;
     }
 
-    public function updatedRole()
+    public function updatedSearch(): void
     {
-        $this->resetPage();
+        $this->perPage = self::PER_PAGE;
     }
 
-    public function updatedShowTrashed()
+    public function updatedRole(): void
     {
-        $this->resetPage();
+        $this->perPage = self::PER_PAGE;
     }
 
-    public function delete(int $userId): void
+    public function updatedShowTrashed(): void
     {
-        $user = User::findOrFail($userId);
-
-        try {
-            $this->authorize('delete', $user);
-        } catch (AuthorizationException) {
-            session()->flash('error', 'You cannot delete your own account.');
-
-            return;
-        }
-
-        $user->delete();
-
-        session()->flash('success', 'User deactivated.');
+        $this->perPage = self::PER_PAGE;
     }
 
-    public function restore(int $userId): void
+    public function delete(int $userId, UserService $users): void
     {
-        $user = User::onlyTrashed()->findOrFail($userId);
-        $this->authorize('restore', $user);
+        $this->tryAction(function () use ($users, $userId) {
+            $users->deactivate(auth()->user(), $userId);
 
-        $user->restore();
+            $this->dispatch('toast', type: 'success', message: 'User deactivated.');
+        }, 'Could not deactivate that user.');
+    }
 
-        session()->flash('success', 'User restored.');
+    public function restore(int $userId, UserService $users): void
+    {
+        $this->tryAction(function () use ($users, $userId) {
+            $users->restore($userId);
+
+            $this->dispatch('toast', type: 'success', message: 'User restored.');
+        }, 'Could not restore that user.');
     }
 
     #[Title('Users')]
-    public function render()
+    public function render(UserService $users)
     {
-        $users = User::query()
+        $query = $users->scopedUsers($this->search, $this->role, $this->showTrashed);
 
-            ->when($this->showTrashed, fn ($query) => $query->onlyTrashed())
-
-            ->when($this->search, function ($query) {
-
-                $query->where(function ($q) {
-
-                    $q->where('name', 'like', "%{$this->search}%")
-                        ->orWhere('email', 'like', "%{$this->search}%");
-
-                });
-            })
-
-            ->when($this->role, function ($query) {
-                $query->where('role', $this->role);
-
-            })
-
-            ->latest()
-
-            ->paginate(10);
+        $total = (clone $query)->count();
+        $records = $query->limit($this->perPage)->get();
 
         return view('livewire.main.admin.user-index', [
-            'users' => $users,
+            'users' => $records,
+            'hasMore' => $total > $this->perPage,
         ]);
     }
 }

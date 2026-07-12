@@ -57,119 +57,47 @@
     <div class="row g-4 mb-4">
 
         {{-- TODOS --}}
-        <div class="col-md-6 col-xl-3">
-
-            <div class="app-card p-4 h-100">
-
+        <div class="col-6 col-xl-3">
+            <div class="app-card p-3 h-100">
                 <div class="d-flex align-items-center justify-content-between mb-3">
-
-                    <div class="app-stat-icon">
-
-                        <i class="bi bi-check2-square"></i>
-
-                    </div>
-
+                    <h3 class="fw-bold mb-0">{{ $user->todos()->count() }}</h3>
+                    <div class="app-stat-icon"><i class="bi bi-check2-square"></i></div>
                 </div>
-
-                <h3 class="fw-bold mb-1">
-
-                    {{ $user->todos()->count() }}
-
-                </h3>
-
-                <p class="text-muted mb-0">
-                    Total Todos
-                </p>
-
+                <p class="text-muted mb-0 app-stat-desc">Total Todos</p>
             </div>
-
         </div>
 
         {{-- COMPLETED --}}
-        <div class="col-md-6 col-xl-3">
-
-            <div class="app-card p-4 h-100">
-
+        <div class="col-6 col-xl-3">
+            <div class="app-card p-3 h-100">
                 <div class="d-flex align-items-center justify-content-between mb-3">
-
-                    <div class="app-stat-icon success">
-
-                        <i class="bi bi-check-circle"></i>
-
-                    </div>
-
+                    <h3 class="fw-bold mb-0">{{ $user->todos()->where('status', 'done')->count() }}</h3>
+                    <div class="app-stat-icon success"><i class="bi bi-check-circle"></i></div>
                 </div>
-
-                <h3 class="fw-bold mb-1">
-
-                    {{ $user->todos()->where('status', 'done')->count() }}
-
-                </h3>
-
-                <p class="text-muted mb-0">
-                    Completed Tasks
-                </p>
-
+                <p class="text-muted mb-0 app-stat-desc">Completed Tasks</p>
             </div>
-
         </div>
 
         {{-- LISTS --}}
-        <div class="col-md-6 col-xl-3">
-
-            <div class="app-card p-4 h-100">
-
+        <div class="col-6 col-xl-3">
+            <div class="app-card p-3 h-100">
                 <div class="d-flex align-items-center justify-content-between mb-3">
-
-                    <div class="app-stat-icon warning">
-
-                        <i class="bi bi-collection"></i>
-
-                    </div>
-
+                    <h3 class="fw-bold mb-0">{{ $user->todoLists()->count() }}</h3>
+                    <div class="app-stat-icon warning"><i class="bi bi-collection"></i></div>
                 </div>
-
-                <h3 class="fw-bold mb-1">
-
-                    {{ $user->todoLists()->count() }}
-
-                </h3>
-
-                <p class="text-muted mb-0">
-                    Todo Lists
-                </p>
-
+                <p class="text-muted mb-0 app-stat-desc">Todo Lists</p>
             </div>
-
         </div>
 
         {{-- DEVICES --}}
-        <div class="col-md-6 col-xl-3">
-
-            <div class="app-card p-4 h-100">
-
+        <div class="col-6 col-xl-3">
+            <div class="app-card p-3 h-100">
                 <div class="d-flex align-items-center justify-content-between mb-3">
-
-                    <div class="app-stat-icon info">
-
-                        <i class="bi bi-phone"></i>
-
-                    </div>
-
+                    <h3 class="fw-bold mb-0">{{ $user->devices()->count() }}</h3>
+                    <div class="app-stat-icon info"><i class="bi bi-phone"></i></div>
                 </div>
-
-                <h3 class="fw-bold mb-1">
-
-                    {{ $user->devices()->count() }}
-
-                </h3>
-
-                <p class="text-muted mb-0">
-                    Connected Devices
-                </p>
-
+                <p class="text-muted mb-0 app-stat-desc">Connected Devices</p>
             </div>
-
         </div>
 
     </div>

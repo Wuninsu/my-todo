@@ -27,7 +27,7 @@
     <div class="d-flex align-items-start justify-content-between">
 
         {{-- LEFT --}}
-        <div class="d-flex gap-3">
+        <div class="d-flex gap-3 min-width-0">
 
             {{-- REORDER + CHECKBOX --}}
             <div class="d-flex flex-column align-items-center gap-1">
@@ -52,9 +52,9 @@
             </div>
 
             {{-- CONTENT --}}
-            <div>
+            <div class="min-width-0">
 
-                <h6 class="fw-semibold mb-1 {{ $todo->status === 'done' ? 'text-decoration-line-through text-muted' : '' }}">
+                <h6 class="fw-semibold mb-1 text-break {{ $todo->status === 'done' ? 'text-decoration-line-through text-muted' : '' }}">
                     {{ $todo->title }}
                 </h6>
 
@@ -106,7 +106,7 @@
         </div>
 
         {{-- RIGHT --}}
-        <div class="d-flex align-items-center gap-1">
+        <div class="d-flex align-items-center gap-1 flex-shrink-0">
 
             <button type="button" class="btn app-icon-btn" wire:click="toggleFavorite({{ $todo->id }})"
                 title="Toggle favorite">
@@ -131,7 +131,7 @@
 
                     <li>
                         <button type="button" class="dropdown-item text-danger"
-                            wire:click="deleteTodo({{ $todo->id }})" wire:confirm="Delete this todo?">
+                            wire:click="deleteTodo({{ $todo->id }})">
                             Delete
                         </button>
                     </li>

@@ -156,6 +156,10 @@
 
     </div>
 
+    {{-- GLOBAL TOASTS + CONFIRM DIALOG --}}
+    @include('partials.toasts')
+    @include('partials.confirm-dialog')
+
     @livewireScripts
 
 </body>

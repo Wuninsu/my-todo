@@ -16,4 +16,14 @@ class TodoListPolicy
     {
         return $user->id === $todoList->user_id;
     }
+
+    public function restore(User $user, TodoList $todoList): bool
+    {
+        return $user->id === $todoList->user_id;
+    }
+
+    public function forceDelete(User $user, TodoList $todoList): bool
+    {
+        return $user->id === $todoList->user_id;
+    }
 }

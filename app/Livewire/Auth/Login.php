@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Auth;
 
+use App\Services\AuthService;
+use App\Traits\TryAction;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -10,7 +12,8 @@ use Livewire\Component;
 #[Layout('layouts.auth')]
 class Login extends Component
 {
-    
+    use TryAction;
+
     public string $email = '';
 
     public string $password = '';
@@ -44,34 +47,33 @@ class Login extends Component
     |--------------------------------------------------------------------------
     */
 
-    public function login()
+    public function login(AuthService $auth)
     {
-        $validated =
-            $this->validate();
+        $validated = $this->validate();
 
-        if (! Auth::attempt([
-            'email' => $validated['email'],
-            'password' => $validated['password'],
-        ], $this->remember)) {
+        return $this->tryAction(function () use ($auth, $validated) {
+            if (! $auth->attempt([
+                'email' => $validated['email'],
+                'password' => $validated['password'],
+            ], $this->remember)) {
 
-            $this->addError(
-                'email',
-                'Invalid login credentials.'
-            );
+                $this->addError(
+                    'email',
+                    'Invalid login credentials.'
+                );
 
-            return;
-        }
+                return null;
+            }
 
-        request()->session()->regenerate();
+            session()->regenerate();
 
-        return redirect()->intended('/');
+            return redirect()->intended($auth->redirectPathFor(Auth::user()));
+        }, 'Something went wrong while signing in. Please try again.');
     }
 
-   
     #[Title('Login')]
     public function render()
     {
         return view('livewire.auth.login');
     }
-
 }

@@ -3,24 +3,32 @@
 namespace App\Livewire\Main\Admin;
 
 use App\Models\User;
+use App\Services\UserService;
+use App\Traits\TryAction;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
 class UserEdit extends Component
 {
+    use TryAction;
 
     public User $user;
+
     public string $name = '';
+
     public string $email = '';
 
     public string $role = 'user';
+
     public string $theme = 'light';
+
     public string $timezone = 'UTC';
 
-  
     public function mount(User $user)
     {
+        $this->authorize('update', $user);
+
         $this->user = $user;
         $this->name = $user->name;
         $this->email = $user->email;
@@ -43,7 +51,7 @@ class UserEdit extends Component
                 'required',
                 'email',
                 'max:255',
-                Rule::unique('users', 'email')->ignore($this->user->id),],
+                Rule::unique('users', 'email')->ignore($this->user->id), ],
 
             'role' => [
                 'required',
@@ -63,26 +71,17 @@ class UserEdit extends Component
         ];
     }
 
-   
-    public function update()
+    public function update(UserService $users)
     {
-        $validated =
-            $this->validate();
+        $validated = $this->validate();
 
-        $this->user->update([
+        return $this->tryAction(function () use ($users, $validated) {
+            $users->update($this->user, $validated);
 
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'role' => $validated['role'],
-            'theme' => $validated['theme'],
-            'timezone' => $validated['timezone'],
-            'is_synced' => false,
-            'version' => $this->user->version + 1,
-            'client_updated_at' => now(),
-        ]);
+            session()->flash('toast', ['type' => 'success', 'message' => 'User updated successfully.']);
 
-        session()->flash('success','User updated successfully.');
-        return redirect()->route('admin.users.view',$this->user);
+            return redirect()->route('admin.users.view', $this->user);
+        }, 'Could not update that user.');
     }
 
     #[Title('Edit User')]

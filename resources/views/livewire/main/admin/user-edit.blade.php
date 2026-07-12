@@ -1,33 +1,5 @@
 <div>
 
-    {{-- HEADER --}}
-    <div class="d-flex align-items-center justify-content-between mb-4">
-
-        <div>
-
-            <h4 class="fw-bold mb-1">
-                Edit User
-            </h4>
-
-            <p class="text-muted mb-0">
-                Update user account information.
-            </p>
-
-        </div>
-
-    </div>
-
-    {{-- ALERT --}}
-    @if (session()->has('success'))
-
-        <div class="alert alert-success rounded-4 border-0 mb-4">
-
-            {{ session('success') }}
-
-        </div>
-
-    @endif
-
     {{-- FORM --}}
     <form wire:submit="update">
 

@@ -1,6 +1,10 @@
+@php
+    $activeMobileFilter = request()->routeIs('dashboard') ? request()->query('filter') : null;
+@endphp
+
 <nav class="app-mobile-nav d-lg-none">
 
-    <a href="{{ route('dashboard') }}" wire:navigate class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+    <a href="{{ route('dashboard') }}" wire:navigate class="{{ request()->routeIs('dashboard') && ! $activeMobileFilter ? 'active' : '' }}">
 
         <i class="bi bi-grid"></i>
 
@@ -8,7 +12,7 @@
 
     </a>
 
-    <a href="#" onclick="event.preventDefault(); window.Livewire.dispatch('filter-selected', { filter: 'today' })">
+    <a href="{{ route('dashboard', ['filter' => 'today']) }}" wire:navigate class="{{ $activeMobileFilter === 'today' ? 'active' : '' }}">
 
         <i class="bi bi-calendar-event"></i>
 
@@ -16,7 +20,7 @@
 
     </a>
 
-    <a href="#" onclick="event.preventDefault(); window.Livewire.dispatch('open-create-todo')">
+    <a href="{{ route('dashboard', ['new' => 1]) }}" wire:navigate>
 
         <i class="bi bi-plus-circle-fill"></i>
 
@@ -24,7 +28,7 @@
 
     </a>
 
-    <a href="#" onclick="event.preventDefault(); window.Livewire.dispatch('filter-selected', { filter: 'favorites' })">
+    <a href="{{ route('dashboard', ['filter' => 'favorites']) }}" wire:navigate class="{{ $activeMobileFilter === 'favorites' ? 'active' : '' }}">
 
         <i class="bi bi-star"></i>
 
