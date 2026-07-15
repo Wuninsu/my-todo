@@ -1,0 +1,38 @@
+<mxfile host="app.diagrams.net" agent="TodoFlow-report-generator" version="24.0.0">
+  <diagram name="Page-1" id="page1">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1420" pageHeight="894" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="c2" value="Database Schema Overview — TodoFlow" style="text;html=1;align=left;verticalAlign=middle;fontSize=20;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="40" y="15" width="900" height="40" as="geometry" /></mxCell>
+        <mxCell id="c3" value="users" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;fontSize=13;align=center;valign=middle;strokeWidth=2;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="40" y="80" width="220" height="74" as="geometry" /></mxCell>
+        <mxCell id="c4" value="id, uuid, name, email, password, avatar, timezone, theme, role, device_uuid,
+is_synced, version, client_updated_at, last_synced_at, created_at, updated_at, deleted_at" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=left;valign=middle;strokeWidth=2;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1"><mxGeometry x="260" y="80" width="1080" height="74" as="geometry" /></mxCell>
+        <mxCell id="c5" value="todo_lists" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;fontSize=13;align=center;valign=middle;strokeWidth=2;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="40" y="166" width="220" height="74" as="geometry" /></mxCell>
+        <mxCell id="c6" value="id, uuid, user_id, name, color, is_default, version, client_updated_at,
+created_at, updated_at, deleted_at" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=left;valign=middle;strokeWidth=2;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1"><mxGeometry x="260" y="166" width="1080" height="74" as="geometry" /></mxCell>
+        <mxCell id="c7" value="todos" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;fontSize=13;align=center;valign=middle;strokeWidth=2;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="40" y="252" width="220" height="118" as="geometry" /></mxCell>
+        <mxCell id="c8" value="id, uuid, user_id, todo_list_id, title, description, status, priority, is_favorite,
+due_date, reminder_at, started_at, completed_at, archived_at, position, is_synced,
+version, client_updated_at, last_synced_at, device_uuid, deleted_at_client, created_at,
+updated_at, deleted_at" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=left;valign=middle;strokeWidth=2;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1"><mxGeometry x="260" y="252" width="1080" height="118" as="geometry" /></mxCell>
+        <mxCell id="c9" value="tags" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;fontSize=13;align=center;valign=middle;strokeWidth=2;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="40" y="382" width="220" height="74" as="geometry" /></mxCell>
+        <mxCell id="c10" value="id, uuid, user_id (nullable), name, color, version, client_updated_at,
+created_at, updated_at, deleted_at" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=left;valign=middle;strokeWidth=2;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1"><mxGeometry x="260" y="382" width="1080" height="74" as="geometry" /></mxCell>
+        <mxCell id="c11" value="tag_todos" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;fontSize=13;align=center;valign=middle;strokeWidth=2;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="40" y="468" width="220" height="52" as="geometry" /></mxCell>
+        <mxCell id="c12" value="id, todo_id, tag_id, created_at, updated_at, deleted_at" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=left;valign=middle;strokeWidth=2;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1"><mxGeometry x="260" y="468" width="1080" height="52" as="geometry" /></mxCell>
+        <mxCell id="c13" value="devices" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;fontSize=13;align=center;valign=middle;strokeWidth=2;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="40" y="532" width="220" height="74" as="geometry" /></mxCell>
+        <mxCell id="c14" value="id, user_id, device_name, device_uuid, platform, last_seen_at,
+created_at, updated_at, deleted_at" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=left;valign=middle;strokeWidth=2;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1"><mxGeometry x="260" y="532" width="1080" height="74" as="geometry" /></mxCell>
+        <mxCell id="c15" value="sync_logs" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;fontSize=13;align=center;valign=middle;strokeWidth=2;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="40" y="618" width="220" height="74" as="geometry" /></mxCell>
+        <mxCell id="c16" value="id, user_id, device_id, status, uploaded, downloaded, conflicts,
+created_at, updated_at" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=left;valign=middle;strokeWidth=2;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1"><mxGeometry x="260" y="618" width="1080" height="74" as="geometry" /></mxCell>
+        <mxCell id="c17" value="todo_changes" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;fontSize=13;align=center;valign=middle;strokeWidth=2;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="40" y="704" width="220" height="52" as="geometry" /></mxCell>
+        <mxCell id="c18" value="id, uuid, user_id, todo_id, action, created_at, updated_at, deleted_at" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=left;valign=middle;strokeWidth=2;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1"><mxGeometry x="260" y="704" width="1080" height="52" as="geometry" /></mxCell>
+        <mxCell id="c19" value="notifications" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#0f172a;fontSize=13;align=center;valign=middle;strokeWidth=2;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="40" y="768" width="220" height="74" as="geometry" /></mxCell>
+        <mxCell id="c20" value="id (uuid), type, notifiable_type, notifiable_id, data (json), read_at,
+created_at, updated_at" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=left;valign=middle;strokeWidth=2;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1"><mxGeometry x="260" y="768" width="1080" height="74" as="geometry" /></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

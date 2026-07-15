@@ -1,0 +1,23 @@
+<mxfile host="app.diagrams.net" agent="TodoFlow-report-generator" version="24.0.0">
+  <diagram name="Page-1" id="page1">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1250" pageHeight="650" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="c2" value="Data Flow Diagram — Level 0 (Context Diagram)" style="text;html=1;align=left;verticalAlign=middle;fontSize=20;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="40" y="15" width="900" height="40" as="geometry" /></mxCell>
+        <mxCell id="c3" value="User" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;align=center;valign=middle;strokeWidth=2;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="60" y="260" width="200" height="100" as="geometry" /></mxCell>
+        <mxCell id="c4" value="Administrator" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;align=center;valign=middle;strokeWidth=2;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="60" y="90" width="200" height="100" as="geometry" /></mxCell>
+        <mxCell id="c5" value="0.0
+TodoFlow Task
+Management System" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=15;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="480" y="175" width="300" height="300" as="geometry" /></mxCell>
+        <mxCell id="c6" value="Task Scheduler" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14;align=center;valign=middle;strokeWidth=2;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="900" y="90" width="200" height="100" as="geometry" /></mxCell>
+        <mxCell id="c7" value="Todo / Tag / List data" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;fontSize=11;" edge="1" parent="1" source="c3" target="c5"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="c8" value="Task lists, Alerts" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;fontSize=11;" edge="1" parent="1" source="c5" target="c3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="c9" value="User &amp; role mgmt" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;fontSize=11;" edge="1" parent="1" source="c4" target="c5"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="c10" value="Reports &amp; Stats" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;fontSize=11;" edge="1" parent="1" source="c5" target="c4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="c11" value="Generate alerts" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;fontSize=11;" edge="1" parent="1" source="c5" target="c6"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="c12" value="Reminder / overdue data" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;fontSize=11;" edge="1" parent="1" source="c6" target="c5"><mxGeometry relative="1" as="geometry" /></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
