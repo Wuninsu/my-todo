@@ -4,7 +4,7 @@ namespace App\Livewire\Auth;
 
 use App\Services\AuthService;
 use App\Traits\TryAction;
-use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\Rules\Password;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
