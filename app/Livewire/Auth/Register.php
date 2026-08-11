@@ -46,6 +46,16 @@ class Register extends Component
         ];
     }
 
+    public function messages(){
+        return [
+            'name.required' => 'Name is required.',
+            'email.required' => 'Email is required.',
+            'email.email' => 'Email must be a valid email address.',
+            'email.unique' => 'You have entered an invalid email address.',
+            'password.required' => 'Password is required.',
+            'password.confirmed' => 'Password confirmation does not match.',
+        ];
+    }
     public function register(AuthService $auth)
     {
         $validated = $this->validate();
