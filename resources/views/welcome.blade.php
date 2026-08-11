@@ -51,9 +51,7 @@
                     <div class="mb-4">
 
                         <span class="auth-badge">
-
-                            Offline First Productivity
-
+                            Fast Experience
                         </span>
 
                     </div>
@@ -114,9 +112,8 @@
                 </div>
 
                 {{-- FEATURES --}}
-                <div class="row g-4 mt-2">
+                {{-- <div class="row g-4 mt-2">
 
-                    {{-- FEATURE --}}
                     <div class="col-md-4">
 
                         <div class="app-card p-4 h-100 text-center">
@@ -144,7 +141,6 @@
 
                     </div>
 
-                    {{-- FEATURE --}}
                     <div class="col-md-4">
 
                         <div class="app-card p-4 h-100 text-center">
@@ -172,7 +168,6 @@
 
                     </div>
 
-                    {{-- FEATURE --}}
                     <div class="col-md-4">
 
                         <div class="app-card p-4 h-100 text-center">
@@ -200,7 +195,7 @@
 
                     </div>
 
-                </div>
+                </div> --}}
 
             </div>
         </div>
