@@ -1,39 +1,100 @@
-<mxfile host="app.diagrams.net" agent="TodoFlow-report-generator" version="24.0.0">
-  <diagram name="Page-1" id="page1">
-    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1250" pageHeight="1050" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-        <mxCell id="c2" value="Use Case Diagram — TodoFlow" style="text;html=1;align=left;verticalAlign=middle;fontSize=20;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="40" y="15" width="900" height="40" as="geometry" /></mxCell>
-        <mxCell id="c3" value="TodoFlow System" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;verticalAlign=top;align=center;fontSize=15;strokeWidth=2;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="260" y="80" width="760" height="900" as="geometry" /></mxCell>
-        <mxCell id="c4" value="User" style="shape=umlActor;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontSize=12;verticalLabelPosition=bottom;verticalAlign=top;" vertex="1" parent="1"><mxGeometry x="100" y="240" width="40" height="80" as="geometry" /></mxCell>
-        <mxCell id="c5" value="Administrator" style="shape=umlActor;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontSize=12;verticalLabelPosition=bottom;verticalAlign=top;" vertex="1" parent="1"><mxGeometry x="1080" y="200" width="40" height="80" as="geometry" /></mxCell>
-        <mxCell id="c6" value="Register Account" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="290" y="120" width="300" height="65" as="geometry" /></mxCell>
-        <mxCell id="c7" value="Login / Logout" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="620" y="120" width="300" height="65" as="geometry" /></mxCell>
-        <mxCell id="c8" value="Create / Edit Todo" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="290" y="200" width="300" height="65" as="geometry" /></mxCell>
-        <mxCell id="c9" value="Toggle Status &amp; Favourite" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="620" y="200" width="300" height="65" as="geometry" /></mxCell>
-        <mxCell id="c10" value="Reorder Todos" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="290" y="280" width="300" height="65" as="geometry" /></mxCell>
-        <mxCell id="c11" value="Manage Todo Lists" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="620" y="280" width="300" height="65" as="geometry" /></mxCell>
-        <mxCell id="c12" value="Manage Tags" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="290" y="360" width="300" height="65" as="geometry" /></mxCell>
-        <mxCell id="c13" value="Filter &amp; Search Todos" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="620" y="360" width="300" height="65" as="geometry" /></mxCell>
-        <mxCell id="c14" value="View Trash" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="290" y="440" width="300" height="65" as="geometry" /></mxCell>
-        <mxCell id="c15" value="Restore Item" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="620" y="440" width="300" height="65" as="geometry" /></mxCell>
-        <mxCell id="c16" value="Permanently Delete Item" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="290" y="520" width="300" height="65" as="geometry" /></mxCell>
-        <mxCell id="c17" value="View &amp; Manage Alerts" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="620" y="520" width="300" height="65" as="geometry" /></mxCell>
-        <mxCell id="c18" value="Update Profile &amp; Avatar" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="290" y="600" width="300" height="65" as="geometry" /></mxCell>
-        <mxCell id="c19" value="Change Password" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="620" y="600" width="300" height="65" as="geometry" /></mxCell>
-        <mxCell id="c20" value="Manage Devices" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="290" y="680" width="300" height="65" as="geometry" /></mxCell>
-        <mxCell id="c21" value="Toggle Dark / Light Theme" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="620" y="680" width="300" height="65" as="geometry" /></mxCell>
-        <mxCell id="c22" value="Manage Users (Deactivate/Restore)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="620" y="790" width="300" height="65" as="geometry" /></mxCell>
-        <mxCell id="c23" value="Edit User Account" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="620" y="870" width="300" height="65" as="geometry" /></mxCell>
-        <mxCell id="c24" value="View System Overview" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="620" y="950" width="300" height="65" as="geometry" /></mxCell>
-        <mxCell id="c25" value="Load More (Users list)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="620" y="1030" width="300" height="65" as="geometry" /></mxCell>
-        <mxCell id="c26" value="" style="edgeStyle=none;rounded=0;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="140" y="280" as="sourcePoint"/><mxPoint x="260" y="280" as="targetPoint"/></mxGeometry></mxCell>
-        <mxCell id="c27" value="" style="edgeStyle=none;rounded=0;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="1080" y="280" as="sourcePoint"/><mxPoint x="1020" y="280" as="targetPoint"/></mxGeometry></mxCell>
-        <mxCell id="c28" value="interacts with all use cases below" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;" vertex="1" parent="1"><mxGeometry x="130" y="300" width="220" height="30" as="geometry" /></mxCell>
-        <mxCell id="c29" value="interacts with all User use cases, plus
-the two Administrator-only cases" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;" vertex="1" parent="1"><mxGeometry x="830" y="250" width="240" height="40" as="geometry" /></mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
+<mxfile host="65bd71144e">
+    <diagram name="Page-1" id="page1">
+        <mxGraphModel dx="375" dy="420" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1250" pageHeight="1050" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="c2" value="Use Case Diagram — TodoFlow" style="text;html=1;align=left;verticalAlign=middle;fontSize=20;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="15" width="900" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="c3" value="TodoFlow System" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;verticalAlign=top;align=center;fontSize=15;strokeWidth=2;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="260" y="80" width="760" height="900" as="geometry"/>
+                </mxCell>
+                <mxCell id="c4" value="User" style="shape=umlActor;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontSize=12;verticalLabelPosition=bottom;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="240" width="40" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="c5" value="Administrator" style="shape=umlActor;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontSize=12;verticalLabelPosition=bottom;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="1080" y="200" width="40" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="c6" value="Register Account" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="120" width="300" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c7" value="Login / Logout" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="620" y="120" width="300" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c8" value="Create / Edit Todo" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="200" width="300" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c9" value="Toggle Status &amp; Favourite" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="620" y="200" width="300" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c10" value="Reorder Todos" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="280" width="300" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c11" value="Manage Todo Lists" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="620" y="280" width="300" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c12" value="Manage Tags" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="360" width="300" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c13" value="Filter &amp; Search Todos" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="620" y="360" width="300" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c14" value="View Trash" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="440" width="300" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c15" value="Restore Item" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="620" y="440" width="300" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c16" value="Permanently Delete Item" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="520" width="300" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c17" value="View &amp; Manage Alerts" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="620" y="520" width="300" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c18" value="Update Profile &amp; Avatar" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="600" width="300" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c19" value="Change Password" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="620" y="600" width="300" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c20" value="Manage Devices" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="680" width="300" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c21" value="Toggle Dark / Light Theme" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="620" y="680" width="300" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c22" value="Manage Users (Deactivate/Restore)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="620" y="790" width="300" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c23" value="Edit User Account" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="620" y="870" width="300" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c24" value="View System Overview" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="620" y="950" width="300" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c25" value="Load More (Users list)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="620" y="1030" width="300" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="c26" value="" style="edgeStyle=none;rounded=0;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;fontSize=11;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="140" y="279" as="sourcePoint"/>
+                        <mxPoint x="260" y="279" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c27" value="" style="edgeStyle=none;rounded=0;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;fontSize=11;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1080" y="280" as="sourcePoint"/>
+                        <mxPoint x="1020" y="280" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c28" value="interacts with all use cases below" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="110" y="280" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="c29" value="interacts with all User use cases, plus the two Administrator-only cases" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="880" y="240" width="240" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
 </mxfile>

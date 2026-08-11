@@ -8,6 +8,27 @@
         </button>
     </div>
 
+      @if ($showForm)
+        <form wire:submit="save" class="p-2 mb-2 app-card">
+
+            <input type="text" wire:model="name" class="form-control form-control-sm mb-2"
+                placeholder="List name" autofocus>
+            @error('name') <div class="small text-danger mb-2">{{ $message }}</div> @enderror
+
+            <input type="color" wire:model="color" class="form-control form-control-sm form-control-color mb-2">
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-sm app-btn-primary flex-grow-1" wire:loading.attr="disabled" wire:target="save">
+                    <span wire:loading.remove wire:target="save">Save</span>
+                    <span wire:loading wire:target="save">
+                        <span class="spinner-border spinner-border-sm"></span>
+                    </span>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary"
+                    wire:click="$set('showForm', false)">Cancel</button>
+            </div>
+        </form>
+    @endif
     <nav class="d-flex flex-column gap-1 pb-2">
 
         <a href="#" wire:click.prevent="$dispatch('list-selected', { uuid: null })"
@@ -53,27 +74,5 @@
         @endforeach
 
     </nav>
-
-    @if ($showForm)
-        <form wire:submit="save" class="p-2 mb-2 app-card">
-
-            <input type="text" wire:model="name" class="form-control form-control-sm mb-2"
-                placeholder="List name" autofocus>
-            @error('name') <div class="small text-danger mb-2">{{ $message }}</div> @enderror
-
-            <input type="color" wire:model="color" class="form-control form-control-sm form-control-color mb-2">
-
-            <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-sm app-btn-primary flex-grow-1" wire:loading.attr="disabled" wire:target="save">
-                    <span wire:loading.remove wire:target="save">Save</span>
-                    <span wire:loading wire:target="save">
-                        <span class="spinner-border spinner-border-sm"></span>
-                    </span>
-                </button>
-                <button type="button" class="btn btn-sm btn-outline-secondary"
-                    wire:click="$set('showForm', false)">Cancel</button>
-            </div>
-        </form>
-    @endif
 
 </div>
